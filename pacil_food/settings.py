@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'main',
     'toko',
     'user_profile',
-    'review'
+    'review',
+    'makanan',
+    'keranjang',
+    'order',
+    'forum'
 ]
 
 MIDDLEWARE = [
