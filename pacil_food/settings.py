@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'toko',
-    'user_profile'
+    'user_profile',
 ]
 
 MIDDLEWARE = [
