@@ -49,7 +49,7 @@ Pembeli|Penjual
 Pembeli dapat memasukkan makanan-makanan yang akan dibeli ke keranjang| Penjual tidak memiliki fitur keranjang
 
 #### Order
-##### Dikerjakan oleh: Carleano Ravelza Wongso
+##### Dikerjakan oleh: Kania Almyra Bilqist
 Modul ini berfungsi untuk mengurus pesanan dari user. Pesanan setelah dicheckout dari keranjang, akan diolah menjadi order, kemudian akan melakukan notifikasi ke pemilik toko untuk diolah.
 
 Pembeli|Penjual
@@ -66,7 +66,7 @@ Pembeli dapat memberikan review terhadap makanan yang baru saja diorder|Penjual 
 
 
 #### Forum
-##### Dikerjakan oleh: Kania Almyra Bilqist
+##### Dikerjakan oleh: Carleano Ravelza Wongso
 Modul ini berfungsi sebagai tempat para user berdiskusi mengenai suatu topik. Nantinya user dapat membuka topik forum dan berdiskusi di dalamnya.
 Pembeli|Penjual
 -|-
