@@ -7,5 +7,5 @@ from order.models import Order
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
-    nilai = models.IntegerField(validators=[MinValueValidator(0),MaxValueValidator(10)])
+    nilai = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(10)])
     komentar = models.TextField()
