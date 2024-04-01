@@ -1,13 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
-import makanan
+from makanan.models import Makanan
 
-class UserOrder(models.Model):
-    pembeli = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE
-    )
 
 class Order(models.Model):
     # ENUM FOR ORDER STATUS
@@ -16,9 +11,9 @@ class Order(models.Model):
         DIPROSES = "diproses", "Diproses"
         SELESAI = "selesai", "Selesai"
 
-    makanan = models.ForeignKey(makanan, on_delete=models.CASCADE)
-    order = models.ForeignKey(UserOrder, on_delete=models.CASCADE)
-    orderID = models.CharField()
+    makanan = models.ForeignKey(Makanan, on_delete=models.CASCADE)
+    order = models.ForeignKey(User, on_delete=models.CASCADE)
+    orderID = models.CharField(max_length=100, unique=True)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
     status = models.CharField(
         max_length=8,
