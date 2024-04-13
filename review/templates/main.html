@@ -6,13 +6,20 @@
       <th>Username</th>
       <th>Nilai</th>
       <th>Komentar</th>
+      <th>Balasan</th>
     </tr>
   
     {% for review in reviews %}
     <tr>
-      <td>{{review.user}}</td>
+      <td>{{ name }}</td>
       <td>{{review.nilai}}</td>
       <td>{{review.komentar}}</td>
+      {% if review.reply%}
+        <td>{{review.reply}}</td>
+      {% else %}
+      <td>(Penjual Belum memberikan reply)</td>
+      {% endif %}
+      
     </tr>
     {% endfor %}
   </table>

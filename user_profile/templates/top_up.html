@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Top Up</title>
+    {% load static %}
+    <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+{% endblock meta %}
+
+{% block content %}
+    <main id="container"
+          class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
+        <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
+        {% if messages %}
+            <div class="absolute flex flex-col">
+                {% for message in messages %}
+                    <div role="alert" class="alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Error! Task failed successfully.</span>
+                    </div>
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="card justify-center w-1/2 py-1 glass text-neutral rounded-xl z-10">
+            <form method="POST" class="">
+                {% csrf_token %}
+                <div class="card-body w-full gap-4 items-stretch">
+                    <div class="flex flex-col text-center gap-2">
+                        <h2 class="card-title text-3xl block text-center font-bold">Top Up</h2>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <section class="w-full flex flex-col gap-2 px-4">
+                            <label for="jumlah" class="label-text ml-2">Amount</label>
+                            <input type="text" id="jumlah" placeholder="minimum top-up : Rp 10.000" name="jumlah"
+                                       class="input rounded-full input-bordered border-primary w-full"/>
+                            <label for="nama-panggilan" class="label-text ml-2 font-bold">
+                                <i class="fas fa-info-circle"></i>
+                                Biaya admin : Rp 1.000
+                            </label>
+                        </section>
+                        <button type="submit" class="btn btn-primary mx-4 rounded-full btn-md text-lg">Top Up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        //Validasi digit
+        window.onload = function() {
+            var jumlahInput = document.getElementById('jumlah');
+            var submitButton = document.querySelector('button[type="submit"]');
+            var errorLabel = document.createElement('label');
+            errorLabel.style.color = 'red';
+            errorLabel.id = 'errorLabel';
+
+            jumlahInput.parentNode.insertBefore(errorLabel, jumlahInput.nextSibling);
+
+            jumlahInput.addEventListener('keyup', function(e) {
+                var value = e.target.value.replace(/[^\d]+/g,'');
+                if (value) {
+                    var number = parseInt(value);
+                    if (number > 0) {
+                        e.target.value = number.toLocaleString();
+                    } else {
+                        e.target.value = '';
+                    }
+                } else {
+                    e.target.value = '';
+                }
+            });
+
+            submitButton.addEventListener('click', function(e) {
+                var value = jumlahInput.value.replace(/[^\d]+/g,'');
+                if (value) {
+                    var number = parseInt(value);
+                    if (number < 10000) {
+                        e.preventDefault();
+                        errorLabel.textContent = 'Minimal Top-Up sebesar Rp 10.000';
+                    } else {
+                        errorLabel.textContent = '';
+                    }
+                } else {
+                    e.preventDefault();
+                    errorLabel.textContent = 'Jumlah tidak valid';
+                }
+            });
+        }
+    </script>
+{% endblock content %}
