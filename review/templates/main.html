@@ -1,0 +1,19 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Review</h1>
+
+<table>
+    <tr>
+      <th>Username</th>
+      <th>Nilai</th>
+      <th>Komentar</th>
+    </tr>
+  
+    {% for review in reviews %}
+    <tr>
+      <td>{{review.user}}</td>
+      <td>{{review.nilai}}</td>
+      <td>{{review.komentar}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock content %}
