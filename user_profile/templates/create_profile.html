@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-non-navbar.html' %}
 
 {% block meta %}
     <title>Profil Baru</title>
@@ -6,7 +6,7 @@
     <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock meta %}
 
-{% block content %}
+{% block base_content %}
     <main id="container"
           class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
         <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
@@ -80,4 +80,4 @@
 
     <script>
     </script>
-{% endblock content %}
+{% endblock base_content %}

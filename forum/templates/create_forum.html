@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Buat Forum Baru</title>
+{% endblock meta %}
+
+{% block content %}
+    <main class="w-full h-full flex justify-center pt-20">
+        <form method="POST" class="min-w-[50%] xl:max-w-[50%] w-98 pt-6 flex flex-col gap-3">
+        {% csrf_token %}
+            <h1 class="text-2xl font-bold">Buat forum baru</h1>
+            <div class="flex flex-col mt-3 gap-1">
+                <label for="judul" class="font-semibold text-lg">Judul</label>
+                <input id="judul" name="judul" type="text" placeholder="Judul forum..."
+                       class="input input-bordered w-full"/>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="deskripsi" class="label-text font-semibold text-lg">Deskripsi</label>
+                <textarea id="deskripsi" name="deskripsi" class="textarea textarea-bordered h-24"
+                          placeholder="Deskripsi..."></textarea>
+            </div>
+            <div>
+                <h3 class="mb-1 text-lg font-semibold">Pilih kategori: <span class="font-light">(maksimal 3)</span></h3>
+                <ul class="grid w-full gap-6 p-2 md:grid-cols-6 items-center">
+                    {% for category in categories %}
+                        <li>
+                            <label for="cb-{{ category.pk }}"
+                                   class="cb p-3 block text-center leading-tight rounded-xl border-[1px] border-primary font-bold">
+                                {{ category.nama }}
+                            </label>
+                            <input type="checkbox" id="cb-{{ category.pk }}" name="kategori" value="{{ category.pk }}"
+                                   class="hidden">
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-primary mt-5">Buat Forum!</button>
+        </form>
+    </main>
+
+    <script>
+        const toggleCb = function (event) {
+            event.target.classList.toggle("bg-primary")
+            event.target.classList.toggle("text-primary-content")
+        }
+
+        document.querySelectorAll(".cb").forEach((e) => {
+            e.addEventListener('click', toggleCb)
+        })
+    </script>
+{% endblock content %}
