@@ -46,7 +46,7 @@ def create_profile(request):
 
         messages.error(request, form.errors)
 
-    return render(request, ' create_profile.html')
+    return render(request, 'create_profile.html')
 
 
 # Fungsi untuk melakukan login user
