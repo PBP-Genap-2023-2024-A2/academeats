@@ -1,0 +1,37 @@
+[
+  {
+    "model": "forum.Kategori",
+    "pk": 1,
+    "fields": {
+      "nama": "Random"
+    }
+  },
+  {
+    "model": "forum.Kategori",
+    "pk": 2,
+    "fields": {
+      "nama": "Promosi"
+    }
+  },
+  {
+    "model": "forum.Kategori",
+    "pk": 3,
+    "fields": {
+      "nama": "Resep dan Memasak"
+    }
+  },
+  {
+    "model": "forum.Kategori",
+    "pk": 4,
+    "fields": {
+      "nama": "Makan Sehat dan Diet"
+    }
+  },
+  {
+    "model": "forum.Kategori",
+    "pk": 5,
+    "fields": {
+      "nama": "Polling dan Survei"
+    }
+  }
+]
