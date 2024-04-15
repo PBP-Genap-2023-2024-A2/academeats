@@ -1,12 +1,12 @@
-{% extends 'base-non-navbar.html' %}
+{% extends 'base.html' %}
 
 {% block meta %}
-    <title>Profil Baru</title>
+    <title>Edit Profile</title>
     {% load static %}
     <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock meta %}
 
-{% block base_content %}
+{% block content %}
     <main id="container"
           class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
         <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
@@ -30,7 +30,7 @@
                 {% csrf_token %}
                 <div class="card-body w-full gap-4 items-stretch">
                     <div class="flex flex-col text-center gap-2">
-                        <h2 class="card-title text-3xl block text-center font-bold">Buat Profil Baru</h2>
+                        <h2 class="card-title text-3xl block text-center font-bold">Edit Profile</h2>
                     </div>
 
                     <div class="flex flex-col gap-2">
@@ -69,9 +69,7 @@
                                 </label>
                             </div>
                         </section>
-                        <button type="submit" id="submit" class="btn btn-primary mx-4 rounded-full btn-md text-lg">
-                            Buat Akun!
-                        </button>
+                        <button type="submit" class="btn btn-primary mx-4 rounded-full btn-md text-lg">Edit</button>
                     </div>
                 </div>
             </form>
@@ -80,4 +78,4 @@
 
     <script>
     </script>
-{% endblock base_content %}
+{% endblock content %}

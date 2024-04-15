@@ -5,3 +5,8 @@ class ReviewForm(ModelForm):
     class Meta:
         model = Review
         fields = ['nilai', 'komentar']
+
+class ReplyForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['reply']
