@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Info Toko</title>
+{% endblock meta %}
+
+{% block content %}
+
+<h1>Info Toko</h1>
+
+{% for makanan in menu %}
+
+<div class="card w-96 glass">
+    <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="car!"/></figure>
+    <div class="card-body">
+      <h2 class="card-title">{{makanan.nama}}</h2>
+      <p>{{makanan.deskripsi}}</p>
+      <div class="card-actions justify-end">
+        <button class="btn btn-primary">tambah ke keranjang</button>
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+  <a role="button" class="btn" >Tambah Makanan</a>
+  {% endblock content %}
