@@ -24,4 +24,3 @@ def checkout_cart(request, checkedout_foods):
     # checkedout_foods =                          # gimana cara dapatin semua id makanan2 yg di-checkout
     
     return
-

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Buat Toko Baru</title>
+{% endblock meta %}
+
+{% block content %}
+
+<h1>Buat Toko Baru</h1>
+
+<form method="POST">
+  {% csrf_token %}
+  <table>
+    {{ form.as_table }}
+    <tr>
+      <td></td>
+      <td>
+        <input type="submit" value="Tambah Toko Baru" />
+      </td>
+    </tr>
+  </table>
+</form>
+
+
+{% endblock content %}

@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
     path('', include(('main.urls', 'main'), namespace='main')),
     path('u/', include(('user_profile.urls', 'user_profile'), namespace='user-profile')),
@@ -11,4 +12,4 @@ urlpatterns = [
     path('review/', include(('review.urls', 'review'), namespace='review')),
     path('forum/', include(('forum.urls', 'forum'), namespace='forum')),
     path('admin/', admin.site.urls),
-]
+    ]
