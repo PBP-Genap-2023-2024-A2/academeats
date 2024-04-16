@@ -9,12 +9,16 @@ class Order(models.Model):
         DIPESAN = "dipesan", "Dipesan"
         DIPROSES = "diproses", "Diproses"
         SELESAI = "selesai", "Selesai"
+        DIBATALKAN = "dibatalkan", "Dibatalkan"
 
     makanan = models.ForeignKey(Makanan, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    orderID = models.CharField(max_length=100)
-    quantity = models.IntegerField(default=0, blank=True, validators=[MinValueValidator(0)])
+    toko = models.ForeignKey(Toko, on_delete=models.CASCADE)
+    order = models.ForeignKey(User, on_delete=models.CASCADE)
+    orderID = models.CharField(max_length=100, unique=True)
+    quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+    date_added = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
-        max_length=8,
+        default = StatusPesanan.DIPESAN,
+        max_length= 10,
         choices=StatusPesanan.choices
     )

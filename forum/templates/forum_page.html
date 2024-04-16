@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+
+{% endblock meta %}
+
+{% block content %}
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
+        <div class="drawer-content flex flex-row pt-24 px-14 pb-10">
+            <main class="w-full">
+                <div class="card w-full bg-primary/10 text-secondary-content">
+                    <div class="card-body">
+                        <h2 class="card-title text-2xl">{{ forum.judul }}</h2>
+                        <div class="flex -mt-1 mb-1 gap-2">
+                            {% for k in forum.kategori.all %}
+                                <div class="badge badge-secondary badge-sm py-2">{{ k.nama }}</div>
+                            {% endfor %}
+                        </div>
+                        <p>{{ forum.deskripsi }}</p>
+                        <div class="card-actions mt-5 items-center text-primary">
+                            <button class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
+                                <i class="fa-regular fa-heart"></i>
+                            </button>
+                            <span class="text-sm mr-3 -ml-1 font-semibold">10</span>
+                            <button class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
+                                <i class="fa-regular fa-comment"></i>
+                            </button>
+                            <span class="text-sm mr-3 -ml-1 font-semibold">10</span>
+                            <button class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
+                                <i class="fa-regular fa-share-from-square"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <comment-box level="0"></comment-box>
+
+                </div>
+            </main>
+            <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">Open drawer</label>
+
+        </div>
+        <div class="drawer-side">
+            <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+            <ul class="px-6 pt-24 min-w-md min-h-full text-base-content">
+                <li class="w-full">
+                    <a href="{% url 'forum:create-forum' %}"
+                       class="btn btn-primary w-full btn-md my-4 rounded-full gap-2 items-center">
+                        <i class="fa-regular fa-plus"></i>
+                        <span>Buat Forum</span>
+                    </a>
+                </li>
+                <li class="font-bold">Categories</li>
+                <ul class="menu">
+                    <!-- Sidebar content here -->
+                    {% for category in categories %}
+                        <li class="flex flex-col">
+                            <a>
+                                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                <span class="self-start text-secondary-content">{{ category.nama }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <li class="font-bold">Popular Forum</li>
+
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        import { CommentBox } from "./commentBox.js";
+    </script>
+{% endblock content %}

@@ -20,7 +20,8 @@ class Profile(models.Model):
     )
 
     # Additional fields for user
-    nama = models.CharField(max_length=255)
+    nama_lengkap = models.CharField(max_length=255)
+    nama_panggilan = models.CharField(max_length=255)
     bio = models.TextField()
     saldo = models.FloatField(default=0)
     role = models.CharField(

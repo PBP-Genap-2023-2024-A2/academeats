@@ -1,9 +1,101 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-    <title>{{ user.profile.nama }}'s Profile</title>
+    <title>Profil</title>
+    {% load static %}
+    <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock meta %}
 
 {% block content %}
+    <main id="container"
+          class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
+        <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
+        {% if messages %}
+            <div class="absolute flex flex-col">
+                {% for message in messages %}
+                    <div role="alert" class="alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Error! Task failed successfully.</span>
+                    </div>
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="card justify-center w-1/2 py-1 glass text-neutral rounded-xl z-10">
+            <form method="POST" class="">
+                {% csrf_token %}
+                <div class="card-body w-full gap-4 items-stretch">
+                    <div class="flex flex-col text-center gap-2">
+                        <h2 class="card-title text-3xl block text-center font-bold">User Profile</h2>
+                    </div>
 
+                    <div class="flex flex-col gap-2">
+                        <section class="w-full flex justify-between">
+                            <div class="w-1/2 flex flex-col gap-2 pl-4">
+                                <label for="nama-lengkap" class="label-text ml-2 font-bold">Nama Lengkap</label>
+                                <input type="text" id="nama-lengkap" value="{{ profile.nama_lengkap }}"
+                                       class="input rounded-full input-bordered border-primary w-full" readonly/>
+                            </div>
+                        </section>
+                        <section class="w-full flex justify-between">
+                            <div class="w-1/2 flex flex-col gap-2 pl-4">
+                                <label for="nama-panggilan" class="label-text ml-2 font-bold">Nama Panggilan</label>
+                                <input type="text" id="nama-panggilan" value="{{ profile.nama_panggilan }}"
+                                       class="input rounded-full input-bordered border-primary w-full" readonly/>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="w-1/2 flex flex-col gap-2 pl-4">
+                                <label for="saldo" class="label-text ml-2 font-bold">Saldo</label>
+                                <div class="flex items-center gap-2">
+                                    <input type="text" id="saldo" value="Rp{{ profile.saldo|floatformat:'-0' }}"
+                                           class="input rounded-full input-bordered border-primary flex-grow" readonly/>
+                                        <a href="/u/profile/{{ profile.user.username }}/top-up" class="btn btn-primary mx-4 rounded-full btn-md text-lg">
+                                            Tambah Saldo
+                                        </a>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="w-1/2 flex flex-col gap-2 pl-4">
+                                <label for="nama-panggilan" class="label-text ml-2 font-bold">Role</label>
+                                <input type="text" id="nama-panggilan" value="{{ profile.role|capfirst }}"
+                                    class="input rounded-full input-bordered border-primary w-full"readonly/>
+                            </div>
+                        </section>
+                        <section class="w-full flex flex-col gap-2 pl-4">
+                            <label for="bio" class="label-text ml-2 font-bold">Bio</label>
+                            <textarea id="bio" name="bio"
+                                      class="textarea textarea-bordered border-primary h-24 rounded-2xl"
+                                      readonly>{{ profile.bio }}</textarea>
+                        </section>
+                        <a href="/u/edit-profile/{{ profile.user.username }}" class="btn btn-primary mx-4 rounded-full btn-md text-lg">
+                            Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <main>
+
+    <script>
+        window.onload = function() {
+            var saldoInput = document.getElementById('saldo');
+            var saldo = saldoInput.value.replace(/[^\d]+/g,'');
+            if (saldo) {
+                var number = parseInt(saldo);
+                if (number > 0) {
+                    saldoInput.value = 'Rp' + number.toLocaleString();
+                } else {
+                    saldoInput.value = 'Rp0';
+                }
+            } else {
+                saldoInput.value = 'Rp0';
+            }
+        }
+    </script>
 {% endblock content %}

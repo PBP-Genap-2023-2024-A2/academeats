@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Daftar makanan yang dipesan:</h3>
+{% for food in foods %}
+<h5>{{food.makanan.nama}}</h5>
+<h5>{{food.jumlah}}</h5>
+{% endfor %}
+
+<h3>Total Harga:</h3>
+<h5>{{harga}}</h5>
+
+<h3>Jumlah Pesanan:</h3>
+<h5>{{jumlah_pesanan}}</h5>
+
+<h3>Status:</h4>
+<h5 id="status">{{status}}</h5>
+
+<button type="button" id="selesai">Pesanan Selesai</button>
+<button type="button" id="batal">Batalkan Pesanan</button>
+
+<script>
+document.getElementById('selesai').addEventListener('click', function() {
+  const url = '/edit_status_selesai/';
+  const data = {};
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Failed to update status');
+    }
+  })
+  .then(data => {
+    if (data.status === 'success') {
+        document.getElementById('status').textContent = 'Selesai';
+    } else {
+      console.error(data.message);
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+});
+
+document.getElementById('batal').addEventListener('click', function() {
+  const url = '/edit_status_batal/';
+  const data = {};
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': csrfToken
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Failed to update status');
+    }
+  })
+  .then(data => {
+    if (data.status === 'success') {
+        document.getElementById('status').textContent = 'Batal';
+    } else {
+      console.error(data.message);
+    }
+  })
+  .catch(error => {
+    console.error(error);
+  });
+});
+</script>
+
+{% endblock content %}

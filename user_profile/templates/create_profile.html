@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-non-navbar.html' %}
 
 {% block meta %}
     <title>Profil Baru</title>
@@ -6,12 +6,27 @@
     <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock meta %}
 
-{% block content %}
+{% block base_content %}
     <main id="container"
           class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
         <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
+        {% if messages %}
+            <div class="absolute flex flex-col">
+                {% for message in messages %}
+                    <div role="alert" class="alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                             viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Error! Task failed successfully.</span>
+                    </div>
+                    <span>{{ message }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
         <div class="card justify-center w-1/2 py-1 glass text-neutral rounded-xl z-10">
-            <form method="POST" class="" onsubmit="makeFullName()">
+            <form method="POST" class="">
                 {% csrf_token %}
                 <div class="card-body w-full gap-4 items-stretch">
                     <div class="flex flex-col text-center gap-2">
@@ -19,30 +34,18 @@
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div role="alert" class="alert alert-error">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6"
-                                         fill="none" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <span>{{ message }}</span>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                        <sectin class="w-full flex justify-between">
+                        <section class="w-full flex justify-between">
                             <div class="w-1/2 flex flex-col gap-2 p-4">
-                                <label for="first-name" class="label-text ml-2 font-bold">First Name</label>
-                                <input type="text" id="first-name" placeholder="First Name"
+                                <label for="nama-lengkap" class="label-text ml-2 font-bold">Nama Lengkap</label>
+                                <input type="text" id="nama-lengkap" placeholder="Nama Lengkap" name="nama_lengkap"
                                        class="input rounded-full input-bordered border-primary w-full"/>
                             </div>
                             <div class="w-1/2 flex flex-col gap-2 p-4">
-                                <label for="last-name" class="label-text ml-2 font-bold">Last Name</label>
-                                <input type="text" id="last-name" placeholder="Last Name"
+                                <label for="nama-panggilan" class="label-text ml-2 font-bold">Nama Panggilan</label>
+                                <input type="text" id="nama-panggilan" placeholder="Nama Panggilan" name="nama_panggilan"
                                        class="input rounded-full input-bordered border-primary w-full"/>
                             </div>
-                        </sectin>
+                        </section>
                         <section class="w-full flex flex-col gap-2 px-4">
                             <label for="bio" class="label-text ml-2">Bio</label>
                             <textarea id="bio" name="bio"
@@ -55,11 +58,13 @@
                             </span>
                             <div class="flex mt-2">
                                 <label class="w-1/2 flex items-center gap-2">
-                                    <input type="radio" name="role" value="pembeli" class="radio radio-sm border-primary" checked/>
+                                    <input type="radio" name="role" value="pembeli"
+                                           class="radio radio-sm border-primary" checked/>
                                     <span>Pembeli</span>
                                 </label>
                                 <label class="w-1/2 flex items-center gap-2">
-                                    <input type="radio" name="role" value="penjual" class="radio radio-sm border-primary"/>
+                                    <input type="radio" name="role" value="penjual"
+                                           class="radio radio-sm border-primary"/>
                                     <span>Penjual</span>
                                 </label>
                             </div>
@@ -67,7 +72,6 @@
                         <button type="submit" id="submit" class="btn btn-primary mx-4 rounded-full btn-md text-lg">
                             Buat Akun!
                         </button>
-                        <input type="text" id="nama" name="nama" class="hidden">
                     </div>
                 </div>
             </form>
@@ -75,15 +79,5 @@
     </main>
 
     <script>
-        const f_name = document.getElementById('first-name')
-        const l_name = document.getElementById('last-name');
-        const full_name = document.getElementById('nama');
-        const submitBtn = document.getElementById("submit");
-
-        const makeFullName = () => {
-            full_name.value = f_name.value + l_name.value
-        }
-
-        makeFullName();
     </script>
-{% endblock content %}
+{% endblock base_content %}
