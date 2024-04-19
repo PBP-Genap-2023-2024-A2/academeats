@@ -6,45 +6,67 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from toko.models import Toko
-
+from makanan.models import Makanan
 
 def show_main_penjual(request):
-    foods = Order.objects.filter()
+    orders = Order.objects.filter(toko = request.user.toko)
 
-    total_harga = 0
-    for i in foods:
-        total_harga += i.makanan.harga
+    for order in orders:
+        total_harga = 0
+        pesanan_cnt = 0
+        orderID = order_id_generator(order)
+        foods = Makanan.objects.filter(order = order) # apa makanan perlu tambahin model order ya...
+        for food in foods:
+            nama_makanan = food.nama
+            harga_makanan = food.harga
+            total_harga += food.harga
+            pesanan_cnt += 1
+        status = order.status
+        harga_total = total_harga
+        jumlah_pesanan = pesanan_cnt
 
     context = {
-        'orderID' : order_id_generator,
-        #'foods' : foods,
-        'status' : Order.status,
-        'harga' : total_harga,
-        'jumlah_pesanan' : ItemKeranjang.jumlah
+        'orderID' : orderID,
+        'nama_makanan' : nama_makanan,
+        'harga_makanan' : harga_makanan,
+        'status' : status,
+        'harga_total' : total_harga,
+        'jumlah_pesanan' : pesanan_cnt,
     }
 
     return render(request, "penjual.html", context)
 
 def show_main_pembeli(request):
-    foods = Order.objects.filter(user=request.user)
+    orders = Order.objects.filter(user = request.user)
 
-    total_harga = 0
-    for i in foods:
-        total_harga += i.makanan.harga
+    for order in orders:
+        total_harga = 0
+        pesanan_cnt = 0
+        orderID = order_id_generator(order)
+        foods = Makanan.objects.filter(order = order) # apa makanan perlu tambahin model order ya...
+        for food in foods:
+            nama_makanan = food.nama
+            harga_makanan = food.harga
+            total_harga += food.harga
+            pesanan_cnt += 1
+        status = order.status
+        harga_total = total_harga
+        jumlah_pesanan = pesanan_cnt
 
     context = {
-        'orderID' : order_id_generator,
-        'foods' : foods,
-        'status' : Order.status,
-        'harga' : total_harga,
-        'jumlah_pesanan' : Order.quantity,
+        'orderID' : orderID,
+        'nama_makanan' : nama_makanan,
+        'harga_makanan' : harga_makanan,
+        'status' : status,
+        'harga_total' : total_harga,
+        'jumlah_pesanan' : pesanan_cnt,
     }
 
     return render(request, "pembeli.html", context)
 
-def order_id_generator(request):
-    orderID = request.user.username.upper()[:5] + Toko.name.upper()[:5]
-    date_added = Order.date_added.split()
+def order_id_generator(order):
+    orderID = order.user.username.upper()[:5] + order.toko.name.upper()[:5] #???
+    date_added = order.date_added.split()
     date = date_added[0][:11]
     orderID += date.replace("-", "")
     checksum = 0
