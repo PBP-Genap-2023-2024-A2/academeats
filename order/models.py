@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from makanan.models import Makanan
+from toko.models import Toko
+
 
 class Order(models.Model):
     # ENUM FOR ORDER STATUS
