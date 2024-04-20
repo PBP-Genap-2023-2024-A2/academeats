@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from keranjang.models import ItemKeranjang, Keranjang
+from keranjang.models import ItemKeranjang
 from .models import Order
 from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
@@ -25,6 +25,7 @@ def show_main_penjual(request):
 
     return render(request, "penjual.html", context)
 
+
 def show_main_pembeli(request):
     foods = Order.objects.filter(user=request.user)
 
@@ -42,6 +43,7 @@ def show_main_pembeli(request):
 
     return render(request, "pembeli.html", context)
 
+
 def order_id_generator(request):
     orderID = request.user.username.upper()[:5] + Toko.name.upper()[:5]
     date_added = Order.date_added.split()
@@ -53,6 +55,7 @@ def order_id_generator(request):
 
     orderID += (checksum % 10)
     return orderID
+
 
 def edit_status_penjual(request, order_id):
     if request.method == 'POST':
