@@ -1,4 +1,4 @@
-from django.db import modelshttps://github.githubassets.com/assets/octocat-spinner-128-9d4bc3602169.gif
+from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from makanan.models import Makanan
