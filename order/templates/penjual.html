@@ -1,22 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% for %}
-
-<h3>Daftar makanan yang dipesan:</h3>
-{% for food in foods %}
-<h5>{{food.makanan.nama}}</h5>
-<h5>{{food.jumlah}}</h5>
+{% for order in orders%}
+<card>
+    <h5>{{order.makanan.nama}}</h5>
+    <h5>{{order.quantity}}</h5>
+    <h5>{{order.user}}</h5>
+    <h5>Status pesanan:</h5>
+    <h5 id="status">{{status}}</h5>
+</card>
 {% endfor %}
-
-<h3>Total Harga:</h3>
-<h5>{{harga}}</h5>
-
-<h3>Jumlah Pesanan:</h3>
-<h5>{{jumlah_pesanan}}</h5>
-
-<h3>Status:</h4>
-<h5 id="status">{{status}}</h5>
 
 <button type="button" id="diproses">Pesanan Diproses</button>
 
