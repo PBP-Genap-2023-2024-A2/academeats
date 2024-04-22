@@ -1,20 +1,23 @@
 from django.core import serializers
-from django.http import HttpResponseNotFound, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 from keranjang.models import ItemKeranjang
 from makanan.models import Makanan
 
 
 def show_main(request):
-    cart = ItemKeranjang.objects.filter(user=request.user)
+    cart = ItemKeranjang.objects.all()
+
+    print(cart)
 
     context = {
         'cart': cart,
     }
 
-    return render(request, "main.html", context)
+    return render(request, "home.html", context)
 
 
 def get_item(request):
@@ -50,8 +53,15 @@ def delete_item(request, keranjang_id):
 
 
 
+@csrf_exempt
+def checkout_cart(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        checkedout_foods = data.get('checkedout_foods', [])
 
-def checkout_cart(request, checkedout_foods):
-    # checkedout_foods =                          # gimana cara dapatin semua id makanan2 yg di-checkout
+        # Sekarang Anda memiliki list dari semua id makanan yang di-checkout
+        # Anda bisa menambahkan kode untuk memproses checkout di sini
 
-    return
+        return JsonResponse({'message': 'Checkout successful'})
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)

@@ -12,12 +12,29 @@
   {% endfor %}
   <h5>Total harga: {{total_harga}}</h5>
   <h5>Status:</h5>
-  <h5 id="status">{{status}}</h5>
-  <button type="button" id="batal">Batalkan Pesanan</button>
+  <h5 id="order_status">{{status}}</h5>
+  <button 
+  type="button" 
+  class="btn btn-primary"
+  id="status-btn"
+  data-status="{{order.status}}"
+  data-id="{{order.pk}}"
+  onclick="updatePesanan(this)"
+  >
+  Batalkan Pesanan</button>
 </card>
 {% endfor %}
 
-<script>
+<card>
+  <h5>Asal</h5>
+  <h5>12</h5>
+  <h5>fasilkom</h5>
+  <h5>Status pesanan:</h5>
+  <h5 id="order_status">Proses</h5>
+  <button type="button" class="btn btn-primary" id="status_btn" value="diproses" onclick="updatePesanan(this)">Batalkan Pesanan?</button>
+</card>
+
+<!-- <script>
 document.getElementById('batal').addEventListener('click', function() {
   const url = '/edit_status_batal/';
   const data = {};
@@ -38,7 +55,7 @@ document.getElementById('batal').addEventListener('click', function() {
   })
   .then(data => {
     if (data.status === 'success') {
-        document.getElementById('status').textContent = 'Pesanan Dibatalkan';
+        document.getElementById('order_status').textContent = 'Pesanan Dibatalkan';
         
     } else {
       console.error(data.message);
@@ -48,6 +65,23 @@ document.getElementById('batal').addEventListener('click', function() {
     console.error(error);
   });
 });
-</script>
+</script> -->
+
+<script>
+  async function updatePesanan(el) {
+    const orderStatus = document.getElementById('order_status')
+
+    var data = new FormData();
+    data.append("order_id", "");
+    const res = await fetch("{% url 'order:edit_status_penjual' %}", {
+      method: "POST",
+      body: {},
+    });
+
+    orderStatus.textContent = "Pesanan Dibatalkan"
+    el.classList.remove('btn-primary')
+    el.classList.add('btn-secondary')
+  }
+ </script>
 
 {% endblock content %}
