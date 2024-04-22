@@ -13,8 +13,9 @@
       <tr>
         <th>
         </th>
-        <th>Name</th>
-        <th>Job</th>
+        <th>Menu</th>
+        <th>Harga</th>
+        <th>Quantity</th>
         <th></th>
       </tr>
     </thead>
@@ -45,10 +46,27 @@
           <span class="badge badge-ghost badge-sm">{{item.makanan.kategori}}</span>
         </td>
         <th>
-          <button class="btn btn-ghost btn-xs">details</button>
+          <button onclick="decreaseQuantity()">-</button>
+              <input type="text" id="quantity" value="{{ item.jumlah }}" min="1" style="width: 2vw; text-align: center;">
+          <button onclick="increaseQuantity()">+</button>
         </th>
       </tr>
       {% endfor %}
   </table>
 </div>
+<script>
+  function decreaseQuantity() {
+      var quantityInput = document.getElementById('quantity');
+      var quantity = Number(quantityInput.value);
+      if (quantity > 1) {
+          quantityInput.value = quantity - 1;
+      }
+  }
+
+  function increaseQuantity() {
+      var quantityInput = document.getElementById('quantity');
+      var quantity = Number(quantityInput.value);
+      quantityInput.value = quantity + 1;
+  }
+</script>
 {% endblock content %}
