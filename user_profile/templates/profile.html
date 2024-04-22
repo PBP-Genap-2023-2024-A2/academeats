@@ -2,14 +2,12 @@
 
 {% block meta %}
     <title>Profil</title>
-    {% load static %}
-    <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock meta %}
 
 {% block content %}
     <main id="container"
-          class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
-        <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
+          class="w-full h-[100vh] flex flex-col justify-evenly items-center bg-gradient-to-br from-base-100/20 to-base-300">
+        <div class="w-full h-full"></div>
         {% if messages %}
             <div class="absolute flex flex-col">
                 {% for message in messages %}
@@ -38,14 +36,14 @@
                             <div class="w-1/2 flex flex-col gap-2 pl-4">
                                 <label for="nama-lengkap" class="label-text ml-2 font-bold">Nama Lengkap</label>
                                 <input type="text" id="nama-lengkap" value="{{ profile.nama_lengkap }}"
-                                       class="input rounded-full input-bordered border-primary w-full" readonly/>
+                                       class="input rounded-full input-bordered border-primary w-full text-secondary-content" readonly/>
                             </div>
                         </section>
                         <section class="w-full flex justify-between">
                             <div class="w-1/2 flex flex-col gap-2 pl-4">
                                 <label for="nama-panggilan" class="label-text ml-2 font-bold">Nama Panggilan</label>
                                 <input type="text" id="nama-panggilan" value="{{ profile.nama_panggilan }}"
-                                       class="input rounded-full input-bordered border-primary w-full" readonly/>
+                                       class="input rounded-full input-bordered border-primary w-full text-secondary-content" readonly/>
                             </div>
                         </section>
                         <section>
@@ -53,7 +51,7 @@
                                 <label for="saldo" class="label-text ml-2 font-bold">Saldo</label>
                                 <div class="flex items-center gap-2">
                                     <input type="text" id="saldo" value="Rp{{ profile.saldo|floatformat:'-0' }}"
-                                           class="input rounded-full input-bordered border-primary flex-grow" readonly/>
+                                           class="input rounded-full input-bordered border-primary flex-grow text-secondary-content" readonly/>
                                         <a href="/u/profile/{{ profile.user.username }}/top-up" class="btn btn-primary mx-4 rounded-full btn-md text-lg">
                                             Tambah Saldo
                                         </a>
@@ -64,13 +62,13 @@
                             <div class="w-1/2 flex flex-col gap-2 pl-4">
                                 <label for="nama-panggilan" class="label-text ml-2 font-bold">Role</label>
                                 <input type="text" id="nama-panggilan" value="{{ profile.role|capfirst }}"
-                                    class="input rounded-full input-bordered border-primary w-full"readonly/>
+                                    class="input rounded-full input-bordered border-primary w-full text-secondary-content"readonly/>
                             </div>
                         </section>
                         <section class="w-full flex flex-col gap-2 pl-4">
                             <label for="bio" class="label-text ml-2 font-bold">Bio</label>
                             <textarea id="bio" name="bio"
-                                      class="textarea textarea-bordered border-primary h-24 rounded-2xl"
+                                      class="textarea textarea-bordered border-primary h-24 rounded-2xl text-secondary-content"
                                       readonly>{{ profile.bio }}</textarea>
                         </section>
                         <a href="/u/edit-profile/{{ profile.user.username }}" class="btn btn-primary mx-4 rounded-full btn-md text-lg">

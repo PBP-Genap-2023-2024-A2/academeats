@@ -99,8 +99,9 @@ def edit_profile(request, username):
             profile.save()
 
             return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
+        
         return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
-        messages.error(request, form.errors)
+        
     
 
     return render(request, 'edit_profile.html', context={'profile': profile, 'user': user})

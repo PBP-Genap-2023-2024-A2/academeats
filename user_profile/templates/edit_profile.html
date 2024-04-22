@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base-non-navbar.html' %}
 
 {% block meta %}
     <title>Edit Profile</title>
@@ -6,7 +6,7 @@
     <link href="{% static 'css/background-register-login.css' %}" rel="stylesheet" type="text/css"/>
 {% endblock meta %}
 
-{% block content %}
+{% block base_content %}
     <main id="container"
           class="w-full h-[100vh] flex justify-evenly items-center overflow-hidden bg-gradient-to-br from-base-100/20 to-base-300">
         <div class="w-full h-full bg-base-300/50 absolute backdrop-blur-[3px] z-2"></div>
@@ -38,18 +38,18 @@
                             <div class="w-1/2 flex flex-col gap-2 p-4">
                                 <label for="nama-lengkap" class="label-text ml-2 font-bold">Nama Lengkap</label>
                                 <input type="text" id="nama-lengkap" placeholder="Nama Lengkap" name="nama_lengkap"
-                                       class="input rounded-full input-bordered border-primary w-full"/>
+                                       class="input rounded-full input-bordered border-primary w-full text-secondary-content"/>
                             </div>
                             <div class="w-1/2 flex flex-col gap-2 p-4">
                                 <label for="nama-panggilan" class="label-text ml-2 font-bold">Nama Panggilan</label>
                                 <input type="text" id="nama-panggilan" placeholder="Nama Panggilan" name="nama_panggilan"
-                                       class="input rounded-full input-bordered border-primary w-full"/>
+                                       class="input rounded-full input-bordered border-primary w-full text-secondary-content"/>
                             </div>
                         </section>
                         <section class="w-full flex flex-col gap-2 px-4">
                             <label for="bio" class="label-text ml-2">Bio</label>
                             <textarea id="bio" name="bio"
-                                      class="textarea textarea-bordered border-primary h-24 rounded-2xl"
+                                      class="textarea textarea-bordered border-primary h-24 rounded-2xl text-secondary-content"
                                       placeholder="Bio"></textarea>
                         </section>
                         <section class="py-4 px-6">
@@ -78,4 +78,4 @@
 
     <script>
     </script>
-{% endblock content %}
+{% endblock base_content %}
