@@ -1,8 +1,14 @@
-from django.db import models
+from django.db import modelshttps://github.githubassets.com/assets/octocat-spinner-128-9d4bc3602169.gif
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from makanan.models import Makanan
 from toko.models import Toko
+
+
+class OrderGroup(models.Model):
+    date_added = models.DateTimeField(auto_now_add=True)
+    orderID = models.CharField(max_length=100, unique=True)
+
 
 class Order(models.Model):
     # ENUM FOR ORDER STATUS
@@ -12,12 +18,11 @@ class Order(models.Model):
         SELESAI = "selesai", "Selesai"
         DIBATALKAN = "dibatalkan", "Dibatalkan"
 
+    order_group = models.ForeignKey(OrderGroup, on_delete=models.CASCADE)
     makanan = models.ForeignKey(Makanan, on_delete=models.CASCADE)
     toko = models.ForeignKey(Toko, on_delete=models.CASCADE)
-    order = models.ForeignKey(User, on_delete=models.CASCADE)
-    orderID = models.CharField(max_length=100, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0, validators=[MinValueValidator(0)])
-    date_added = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
         default = StatusPesanan.DIPESAN,
         max_length= 10,

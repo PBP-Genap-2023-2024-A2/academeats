@@ -20,8 +20,8 @@
                           placeholder="Deskripsi..."></textarea>
             </div>
             <div>
-                <h3 class="mb-1 text-lg font-semibold">Pilih kategori: <span class="font-light">(maksimal 3)</span></h3>
-                <ul class="grid w-full gap-6 p-2 md:grid-cols-6 items-center">
+                <h3 class="mb-1 text-lg font-semibold">Pilih kategori:</h3>
+                <ul class="grid w-full gap-6 p-2 md:grid-cols-5 items-center">
                     {% for category in categories %}
                         <li>
                             <label for="cb-{{ category.pk }}"

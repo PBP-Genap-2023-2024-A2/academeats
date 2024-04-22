@@ -7,7 +7,7 @@ def tambah_makanan(request):
     form = MakananForm(request.POST or None)
    
     if form.is_valid() and request.method == "POST":
-       toko_id=request.GET()
+       toko=request.user.toko_set
        makanan=form.save(commit=False)
        makanan=request.user
        makanan.save()
