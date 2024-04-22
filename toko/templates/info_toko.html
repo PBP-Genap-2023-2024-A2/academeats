@@ -5,22 +5,25 @@
 {% endblock meta %}
 
 {% block content %}
-
-<h1>Info Toko</h1>
-
-{% for makanan in menu %}
-
-<div class="card w-96 glass">
-    <figure><img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="car!"/></figure>
-    <div class="card-body">
-      <h2 class="card-title">{{makanan.nama}}</h2>
-      <p>{{makanan.deskripsi}}</p>
-      <div class="card-actions justify-end">
-        <button class="btn btn-primary">tambah ke keranjang</button>
-      </div>
-    </div>
-  </div>
-
-  {% endfor %}
-  <a role="button" class="btn" >Tambah Makanan</a>
-  {% endblock content %}
+    <main class="w-full min-h-screen p-14">
+        <h1 class="text-xl font-semibold mb-5">Menu</h1>
+        <div class="w-full grid grid-cols-5 gap-10">
+            {% for makanan in menu %}
+                <div class="card h-fit bg-primary text-primary-content">
+                    <figure>
+                        <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="car!"/>
+                    </figure>
+                    <div class="card-body">
+                        <h2 class="card-title">{{ makanan.nama }}</h2>
+                        <p>{{ makanan.deskripsi }}</p>
+                        <div class="card-actions justify-end">
+                            <button id="cart-{{ makanan.pk }}" value="{{ makanan.pk }}" onclick="addToCart(this)" class="btn btn-accent">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock content %}

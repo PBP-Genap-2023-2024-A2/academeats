@@ -23,16 +23,15 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
-                            <span class="badge badge-sm indicator-item">8</span>
+                            <span id="badge-jumlah" class="badge badge-sm indicator-item">8</span>
                         </div>
                     </div>
-                    <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
-                        <div class="card-body">
-                            <span class="font-bold text-lg">8 Items</span>
-                            <span class="text-info">Subtotal: $999</span>
-                            <div class="card-actions">
-                                <button class="btn btn-primary btn-block">View cart</button>
+                    <div tabindex="0" class="mt-3 z-[1] card card-compact dropdown-content w-96 p-3 bg-base-100 shadow">
+                        <div class="card-body max-h-1/2">
+                            <div id="cart-container" class="">
+
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -52,7 +51,7 @@
                             </a>
                         </li>
                         <li><a>Settings</a></li>
-                        <li><a>Logout</a></li>
+                        <li><a href="{% url 'user_profile:logout' %}">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -86,4 +85,50 @@
             </a>
         </nav>
     </footer>
+
+    <script>
+        async function refreshCart() {
+            const data = await fetch("{% url 'keranjang:get-item' %}", {
+                method: "GET"
+            });
+            const keranjang = await data.json()
+
+            const badgeJml = document.getElementById('badge-jumlah')
+            const jmlItem = document.getElementById("jumlah-item")
+
+
+            badgeJml.innerText = `${keranjang.length}`
+
+            const cartContainer = document.getElementById('cart-container')
+
+            keranjang.forEach(item => {
+                const card = document.createElement('div')
+                const classesName = "card card-side bg-base-100 shadow-xl".split(" ")
+                card.classList.add(classesName)
+                card.innerHTML = `<figure class="p-3"><img src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"
+                                             alt="Movie"/></figure>
+                                <div class="card-body">
+                                    <h2 class="card-title"></h2>
+                                    <p>Click the button to watch on Jetflix app.</p>
+                                    <div class="card-actions justify-end">
+                                        <button class="btn btn-primary">Watch</button>
+                                    </div>
+                                </div>`
+                cartContainer.appendChild(card)
+            })
+        }
+        
+        refreshCart();
+
+        function addToCart(event) {
+            var data = new FormData()
+
+            data.append("makanan_id", event.value)
+
+            fetch("{% url 'keranjang:add-item' %}", {
+                method: "POST",
+                body: data
+            }).then(refreshCart)
+        }
+    </script>
 {% endblock base_content %}
