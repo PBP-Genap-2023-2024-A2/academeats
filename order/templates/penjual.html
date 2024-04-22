@@ -1,48 +1,56 @@
-{% extends 'base.html' %}
-{% block content %}
-
-{% for order in orders%}
+{% extends 'base.html' %} {% block content %} {% for order in orders%}
 <card>
-    <h5>{{order.makanan.nama}}</h5>
-    <h5>{{order.quantity}}</h5>
-    <h5>{{order.user}}</h5>
-    <h5>Status pesanan:</h5>
-    <h5 id="status">{{status}}</h5>
+  <h5>{{order.makanan.nama}}</h5>
+  <h5>{{order.quantity}}</h5>
+  <h5>{{order.user}}</h5>
+  <h5>Status pesanan:</h5>
+  <h5 id="order_status">{{status}}</h5>
+  <button
+    type="button"
+    class="btn btn-primary"
+    id="status_btn"
+    data-status="{{order.status}}"
+    data-orderid="{{order.pk}}"
+    onclick="updatePesanan(this)"
+  >
+    {{order.status}}
+  </button>
+  <button onclick="deleteOrder(this)">Delte</button>
 </card>
 {% endfor %}
 
-<button type="button" id="diproses">Pesanan Diproses</button>
-
 <script>
-document.getElementById('diproses').addEventListener('click', function() {
-  const url = '/edit_status_penjual/';
-  const data = {};
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => {
-    if (response.ok) {
-      return response.json();
+  async function updatePesanan(el) {
+    const orderStatus = document.getElementById("order_status");
+    if (el.dataset.status === "DIPESAN") {
+      var data = new FormData();
+      data.append("order_id", el.dataset.orderid);
+      data.append("order_status", "DIPROSES");
+      const res = await fetch("{% url 'order:edit_status_penjual' %}", {
+        method: "POST",
+        body: data,
+      });
+      orderStatus.textContent = "DIPROSES";
+      el.textContent = "Selesaikan Pesanan";
+      el.dataset.status = "selesai";
+      el.classList.remove("btn-primary");
+      el.classList.add("btn-secondary");
     } else {
-      throw new Error('Failed to update status');
+      var data = new FormData();
+      data.append("order_id", "");
+      const res = await fetch("{% url 'order:edit_status_penjual' %}", {
+        method: "POST",
+        body: {},
+      });
+      orderStatus.textContent = "SELESAI";
+      el.dataset.status = "selesai";
+      el.classList.add("btn-disabled");
     }
-  })
-  .then(data => {
-    if (data.status === 'success') {
-        document.getElementById('status').textContent = 'Diproses';
-    } else {
-      console.error(data.message);
-    }
-  })
-  .catch(error => {
-    console.error(error);
-  });
-});
+  }
+
+  async function deleteOrder(el) {
+    const res = await fetch(`/delete/${el.getAttribute("data-orderid")}`);
+  }
 </script>
 
 {% endblock content %}
