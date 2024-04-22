@@ -4,10 +4,10 @@ from .models import Order, OrderGroup
 from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from toko.models import Toko
 from makanan.models import Makanan
-
+from django.views.decorators.csrf import csrf_exempt
 
 def show_main_penjual(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
@@ -61,15 +61,18 @@ def order_id_generator(order):
     orderID += (checksum % 10)
     return orderID
 
-
-def edit_status_penjual(request, order_id):
+@csrf_exempt
+def edit_status_penjual(request):
     if request.method == 'POST':
-        order = get_object_or_404(Order, orderID=order_id)
-        order.status = Order.StatusPesanan.DIPROSES
+        order_id = request.POST.get('order_id')
+        order = Order.objects.get(pk=int(order_id))
+        order_status = request.POST.get('order_status')
+        order.status = getattr(Order.StatusPesanan, order_status)
         order.save()
-        return JsonResponse({'status': 'success'})
+        # return JsonResponse({'status': 'success'})
     else:
-        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+        pass
+        # return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
 def edit_status_selesai(request, order_id):
@@ -91,15 +94,23 @@ def edit_status_batal(request, order_id):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def update_status_batal(request, order_id):
-    orders = Order.objects.filter(user=request.user)
-    order_group = OrderGroup.objects.filter(user=request.user)
-    order_list = []
+def update_status_batal(request):
 
-    for og in order_group:
-        order_list.append(orders.filter(order_group = og))
+    if request.method == 'POST':
+        order_group_id = request.POST.get("og_id")
+        order_group = OrderGroup.objects.get(pk=int(order_group_id))
+        orders = Order.objects.filter(order_group=order_group)
 
-    #for og in order_group:
-    #    for order in og:
-    #        if order.status == Order.StatusPesanan.DIBATALKAN
+        for order in orders:
+            order.status = Order.StatusPesanan.DIBATALKAN
+            order.save()
 
+
+def delete_order(request, order_id):
+    order = Order.objects.get(order_id)
+
+    print(order)
+
+    order.delete()
+
+    return HttpResponse('DELETED')
