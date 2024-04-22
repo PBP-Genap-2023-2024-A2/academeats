@@ -14,3 +14,7 @@ def tambah_makanan(request):
 
     context = {'form': form}
     return render(request, 'tambah_makanan.html', context)
+
+def get_stok(request):
+    makanan = Makanan.objects.get(pk=request.GET.get('makanan_id'))
+    return render(request, 'get_stok.html', {'makanan': makanan})

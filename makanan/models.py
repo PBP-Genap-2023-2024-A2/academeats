@@ -6,6 +6,9 @@ from toko.models import Toko
 
 class Kategori(models.Model):
     nama = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.nama
 
 
 class Makanan(models.Model):
