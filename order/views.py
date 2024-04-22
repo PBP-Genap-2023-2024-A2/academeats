@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from keranjang.models import ItemKeranjang, Keranjang
+from keranjang.models import ItemKeranjang
 from .models import Order
 from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
