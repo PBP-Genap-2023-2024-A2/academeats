@@ -4,13 +4,8 @@ from toko.models import Toko
 from makanan.forms import MakananForm
 
 
-def tambah_makanan(request):
-    form = MakananForm(request.POST or None)
+def detail_makanan(request, makanan_id):
+    makanan = Makanan.objects.get(pk=makanan_id)
 
-    if form.is_valid() and request.method == "POST":
-        makanan = form.save(commit=False)
-        makanan.save()
-        return redirect('main:index')
+    return render(request, "detail_makanan.html", {'makanan': makanan})
 
-    context = {'form': form}
-    return render(request, 'tambah_makanan.html', context)
