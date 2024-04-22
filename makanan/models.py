@@ -5,13 +5,7 @@ from toko.models import Toko
 
 
 class Kategori(models.Model):
-    
-    class NamaKategori(models.TextChoices):
-        CAMILAN = 'camilan', 'Camilan'
-        MAKANAN_BERAT = 'makanan_berat', 'MakananBerat'
-        MINUMAN = 'minuman', 'Minuman'
-
-    nama = models.CharField(max_length=20, choices=NamaKategori.choices)
+    nama = models.CharField(max_length=20)
 
 
 class Makanan(models.Model):

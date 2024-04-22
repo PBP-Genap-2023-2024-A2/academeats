@@ -4,9 +4,10 @@ from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.urls import reverse
 
 from makanan.forms import MakananForm
-from makanan.models import Makanan
+from makanan.models import Makanan, Kategori
 from toko.forms import TokoForm
 from toko.models import Toko
+from user_profile.models import Profile
 
 
 def manage_toko(request):
@@ -21,12 +22,9 @@ def info_toko(request, toko_id):
 
     context = {'toko': toko, 'menu': menu}
 
-    if request.user.profile.role == Profile.Role.PEMBELI:
-        template = 'info_toko.html'
-    else:
-        template = 'manage_toko.html'
+    print(toko.description)
 
-    return render(request, template, context)
+    return render(request, 'info_toko.html', context)
 
 
 def create_toko(request):
@@ -60,9 +58,11 @@ def tambah_makanan(request, toko_id):
 
     if form.is_valid() and request.method == "POST":
         makanan = form.save(commit=False)
+
         makanan.toko = toko
+        makanan.kategori = Kategori.objects.get(pk=int(form.cleaned_data.get("kategori")))
         makanan.save()
-        return redirect('info_toko', toko_id=toko_id)
+        return redirect('toko:info_toko', toko_id=toko_id)
 
     context = {
         'form': form
