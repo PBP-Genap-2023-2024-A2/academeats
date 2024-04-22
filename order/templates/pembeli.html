@@ -1,54 +1,23 @@
 {% extends 'base.html' %}
-{% block content %}
-<h3>Daftar makanan yang dipesan:</h3>
-{% for food in foods %}
-<h5>{{food.makanan.nama}}</h5>
-<h5>{{food.jumlah}}</h5>
+
+{% for og in order_group %}
+<card>
+  <h5>Order ID: {{og.orderID}}</h5>
+  {% for order in og %}
+    <card>
+      <h5>{{order.makanan.nama}}</h5>
+      <h5>{{order.quantity}}</h5>
+      <h5>{{order.makanan.harga}}</h5>
+    </card>
+  {% endfor %}
+  <h5>Total harga: {{total_harga}}</h5>
+  <h5>Status:</h5>
+  <h5 id="status">{{status}}</h5>
+  <button type="button" id="batal">Batalkan Pesanan</button>
+</card>
 {% endfor %}
 
-<h3>Total Harga:</h3>
-<h5>{{harga}}</h5>
-
-<h3>Jumlah Pesanan:</h3>
-<h5>{{jumlah_pesanan}}</h5>
-
-<h3>Status:</h4>
-<h5 id="status">{{status}}</h5>
-
-<button type="button" id="selesai">Pesanan Selesai</button>
-<button type="button" id="batal">Batalkan Pesanan</button>
-
 <script>
-document.getElementById('selesai').addEventListener('click', function() {
-  const url = '/edit_status_selesai/';
-  const data = {};
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRFToken': csrfToken
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => {
-    if (response.ok) {
-      return response.json();
-    } else {
-      throw new Error('Failed to update status');
-    }
-  })
-  .then(data => {
-    if (data.status === 'success') {
-        document.getElementById('status').textContent = 'Selesai';
-    } else {
-      console.error(data.message);
-    }
-  })
-  .catch(error => {
-    console.error(error);
-  });
-});
-
 document.getElementById('batal').addEventListener('click', function() {
   const url = '/edit_status_batal/';
   const data = {};
@@ -69,7 +38,8 @@ document.getElementById('batal').addEventListener('click', function() {
   })
   .then(data => {
     if (data.status === 'success') {
-        document.getElementById('status').textContent = 'Batal';
+        document.getElementById('status').textContent = 'Pesanan Dibatalkan';
+        
     } else {
       console.error(data.message);
     }

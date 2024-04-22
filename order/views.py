@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from keranjang.models import ItemKeranjang
-from .models import Order
+from .models import Order, OrderGroup
 from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
@@ -9,29 +9,16 @@ from toko.models import Toko
 from makanan.models import Makanan
 
 
-def show_main_penjual(request):
-    orders = Order.objects.filter(toko=request.user.toko)
+def show_main_penjual(request, toko_id):
+    toko = Toko.objects.get(pk=toko_id)
+    orders = Order.objects.filter(toko=toko)
 
+    pesanan_cnt = 0
     for order in orders:
-        total_harga = 0
-        pesanan_cnt = 0
-        orderID = order_id_generator(order)
-        foods = Makanan.objects.filter(order=order)  # apa makanan perlu tambahin model order ya...
-        for food in foods:
-            nama_makanan = food.nama
-            harga_makanan = food.harga
-            total_harga += food.harga
-            pesanan_cnt += 1
-        status = order.status
-        harga_total = total_harga
-        jumlah_pesanan = pesanan_cnt
+        pesanan_cnt += 1
 
     context = {
-        'orderID': orderID,
-        'nama_makanan': nama_makanan,
-        'harga_makanan': harga_makanan,
-        'status': status,
-        'harga_total': total_harga,
+        'orders': orders,
         'jumlah_pesanan': pesanan_cnt,
     }
 
@@ -40,28 +27,23 @@ def show_main_penjual(request):
 
 def show_main_pembeli(request):
     orders = Order.objects.filter(user=request.user)
+    order_group = OrderGroup.objects.filter(user=request.user)
+    order_list = []
 
-    for order in orders:
+    for og in order_list:
+        order_list.append(orders.filter(order_group = og))
+
+    for og in order_group:
         total_harga = 0
         pesanan_cnt = 0
-        orderID = order_id_generator(order)
-        foods = Makanan.objects.filter(order=order)  # apa makanan perlu tambahin model order ya...
-        for food in foods:
-            nama_makanan = food.nama
-            harga_makanan = food.harga
-            total_harga += food.harga
+        for order in og:
+            total_harga += order.makanan.harga * order.quantity
             pesanan_cnt += 1
-        status = order.status
-        harga_total = total_harga
-        jumlah_pesanan = pesanan_cnt
 
     context = {
-        'orderID': orderID,
-        'nama_makanan': nama_makanan,
-        'harga_makanan': harga_makanan,
-        'status': status,
         'harga_total': total_harga,
         'jumlah_pesanan': pesanan_cnt,
+        'order_group': order_list,
     }
 
     return render(request, "pembeli.html", context)
@@ -108,3 +90,16 @@ def edit_status_batal(request, order_id):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def update_status_batal(request, order_id):
+    orders = Order.objects.filter(user=request.user)
+    order_group = OrderGroup.objects.filter(user=request.user)
+    order_list = []
+
+    for og in order_group:
+        order_list.append(orders.filter(order_group = og))
+
+    #for og in order_group:
+    #    for order in og:
+    #        if order.status == Order.StatusPesanan.DIBATALKAN
+
