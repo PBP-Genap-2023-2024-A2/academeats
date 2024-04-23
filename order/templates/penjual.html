@@ -1,55 +1,94 @@
-{% extends 'base.html' %} {% block content %} {% for order in orders%}
-<card>
-  <h5>{{order.makanan.nama}}</h5>
-  <h5>{{order.quantity}}</h5>
-  <h5>{{order.user}}</h5>
-  <h5>Status pesanan:</h5>
-  <h5 id="order_status">{{status}}</h5>
-  <button
-    type="button"
-    class="btn btn-primary"
-    id="status_btn"
-    data-status="{{order.status}}"
-    data-orderid="{{order.pk}}"
-    onclick="updatePesanan(this)"
-  >
-    {{order.status}}
-  </button>
-  <button onclick="deleteOrder(this)">Delte</button>
-</card>
-{% endfor %}
+{% extends 'base.html' %} {% block content %}
+
+<div class="w-full min-h-screen flex">
+  <div class="divider divider-horizontal"></div>
+  <section class="basis-3/4 p-8">
+    <div class="flex justify-between items-center mb-10">
+      <h2 class="text-3xl font-bold mb-5">Order</h2>
+    </div>
+    <section class="grid grid-cols-3 gap-10">
+      {% for order in orders %}
+      <div
+        id="order_card_{{order.pk}}"
+        class="card h-fit bg-primary text-primary-content"
+      >
+        <div class="card-body">
+          <h2 class="card-title">
+            {{ order.makanan.nama }} ({{ order.quantity }} pcs)
+          </h2>
+          <h3>{{ order.user }}</h3>
+          <h3>Status:</h3>
+          <h5 id="order_status_{{order.pk}}">{{order.status}}</h5>
+          <button
+            type="button"
+            class="btn"
+            id="status_btn_{{order.pk}}"
+            value="{{order.pk}}"
+            onclick="updatePesanan(this)"
+          >
+            Proses Pesanan {{order.status}}
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+  </section>
+</div>
 
 <script>
-  async function updatePesanan(el) {
-    const orderStatus = document.getElementById("order_status");
-    if (el.dataset.status === "DIPESAN") {
-      var data = new FormData();
-      data.append("order_id", el.dataset.orderid);
-      data.append("order_status", "DIPROSES");
-      const res = await fetch("{% url 'order:edit_status_penjual' %}", {
-        method: "POST",
-        body: data,
-      });
-      orderStatus.textContent = "DIPROSES";
-      el.textContent = "Selesaikan Pesanan";
-      el.dataset.status = "selesai";
-      el.classList.remove("btn-primary");
-      el.classList.add("btn-secondary");
+  async function updateButton(el, status) {
+    const orderCard = document.getElementById(`order_card_${el.value}`);
+    if (status === "DIPESAN") {
+      el.classList.remove("btn-disable")
+      el.classList.remove("btn-accent")
+      el.classList.add("btn-secondary")
+      orderCard.classList.remove("bg-secondary")
+      orderCard.classList.add("bg-primary")
+    } else if (status === "DIPROSES") {
+      el.classList.remove("btn-secondary")
+      el.classList.remove("btn-disable")
+      el.classList.add("btn-primary");
+      orderCard.classList.remove("bg-primary")
+      orderCard.classList.add("bg-secondary")
     } else {
-      var data = new FormData();
-      data.append("order_id", "");
-      const res = await fetch("{% url 'order:edit_status_penjual' %}", {
-        method: "POST",
-        body: {},
-      });
-      orderStatus.textContent = "SELESAI";
-      el.dataset.status = "selesai";
-      el.classList.add("btn-disabled");
+      el.classList.remove("btn-primary")
+      el.classList.remove("btn-secondary");
+      el.classList.add("btn-disabled")
+      orderCard.classList.remove("bg-primary")
+      orderCard.classList.add("bg-secondary/50")
+
     }
+    el.innerText = 'Status Pesanan ' + status
   }
 
-  async function deleteOrder(el) {
-    const res = await fetch(`/delete/${el.getAttribute("data-orderid")}`);
+  {% for order in orders %}
+    updateButton(document.getElementById('status_btn_{{order.pk}}'), "{{order.status}}")
+  {% endfor %}
+
+  async function updatePesanan(el) {
+    const orderStatus = document.getElementById(`order_status_${el.value}`);
+      if (orderStatus.innerText === "DIPESAN") {
+        var data = new FormData();
+        data.append("order_id", el.value);
+        data.append("order_status", "DIPROSES");
+        const res = await fetch("{% url 'order:edit_status_penjual' %}", {
+          method: "POST",
+          body: data,
+        });
+        orderStatus.innerText = "DIPROSES"
+      } else {
+        var data = new FormData();
+        data.append("order_id", el.value);
+        data.append("order_status", "SELESAI");
+        const res = await fetch("{% url 'order:edit_status_penjual' %}", {
+          method: "POST",
+          body: data,
+        });
+
+        orderStatus.innerText = "SELESAI"
+      }
+
+    updateButton(el, orderStatus.innerText)
   }
 </script>
 

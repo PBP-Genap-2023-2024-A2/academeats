@@ -1,22 +1,36 @@
 [
-    {
-        "model": "order.OrderGroup",
-        "pk": 1,
-        "fields": {
-            "orderID": "ABCD",
-            "date_added": "2024-01-20 19:10:10"
-        }
-    },
-    {
-      "model": "order.Order",
-      "pk": 1,
-      "fields": {
-        "order_group": 1,
-        "makanan": 1,
-        "toko": 1,
+  {
+    "model": "order.OrderGroup",
+    "pk": 1,
+    "fields": {
+        "orderID": "ABCD",
+        "date_added": "2024-01-20 19:10:10",
         "user": 1,
-        "quantity": 10,
-        "status": "DIPESAN"
-      }
+        "total_harga": 100.0
     }
-  ]
+},
+{
+  "model": "order.Order",
+  "pk": 1,
+  "fields": {
+    "order_group": 1,
+    "makanan": 1,
+    "toko": 1,
+    "user": 1,
+    "quantity": 10,
+    "status": "DIPESAN"
+  }
+},
+{
+  "model": "order.Order",
+  "pk": 2,
+  "fields": {
+    "order_group": 1,
+    "makanan": 2,
+    "toko": 1,
+    "user": 1,
+    "quantity": 10,
+    "status": "DIPESAN"
+  }
+}
+]
