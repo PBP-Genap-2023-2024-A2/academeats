@@ -13,4 +13,5 @@ class MakananForm(ModelForm):
 
     class Meta:
         model = Makanan
-        fields = ['nama', 'deskripsi', 'harga', 'stok']
+        fields = ['nama', 'deskripsi', 'harga', 'stok', 'img_url']
+

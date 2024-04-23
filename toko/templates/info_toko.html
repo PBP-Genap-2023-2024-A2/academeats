@@ -11,7 +11,7 @@
             {% for makanan in menu %}
                 <div class="card h-fit bg-primary text-primary-content">
                     <figure>
-                        <img src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="car!"/>
+                        <img src="{{ makanan.img_url }}" alt="car!"/>
                     </figure>
                     <div class="card-body">
                         <h2 class="card-title">{{ makanan.nama }}</h2>

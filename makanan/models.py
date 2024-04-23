@@ -18,4 +18,4 @@ class Makanan(models.Model):
     stok = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)])
     toko = models.ForeignKey(Toko, on_delete=models.CASCADE)
     kategori = models.ForeignKey(Kategori, null=True, on_delete=models.RESTRICT)
-    
+    img_url = models.CharField(max_length=500)
