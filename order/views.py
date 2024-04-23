@@ -26,25 +26,25 @@ def show_main_penjual(request, toko_id):
 
 
 def show_main_pembeli(request):
-    orders = Order.objects.filter(user=request.user)
-    order_group = OrderGroup.objects.filter(user=request.user)
+    orders = Order.objects.all()
+    order_group = OrderGroup.objects.all()
     order_list = []
 
-    for og in order_list:
+    for og in order_group:
+        print(og)
         order_list.append(orders.filter(order_group = og))
 
-    for og in order_group:
+    for ods in order_list:
         total_harga = 0
         pesanan_cnt = 0
-        for order in og:
-            total_harga += order.makanan.harga * order.quantity
+        for od in ods:
+            total_harga += od.makanan.harga * od.quantity
             pesanan_cnt += 1
 
     context = {
-        'harga_total': total_harga,
-        'jumlah_pesanan': pesanan_cnt,
         'order_group': order_list,
     }
+    print(order_list)
 
     return render(request, "pembeli.html", context)
 
@@ -61,6 +61,7 @@ def order_id_generator(order):
     orderID += (checksum % 10)
     return orderID
 
+
 @csrf_exempt
 def edit_status_penjual(request):
     if request.method == 'POST':
@@ -69,21 +70,10 @@ def edit_status_penjual(request):
         order_status = request.POST.get('order_status')
         order.status = getattr(Order.StatusPesanan, order_status)
         order.save()
-        # return JsonResponse({'status': 'success'})
-    else:
-        pass
-        # return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-
-
-def edit_status_selesai(request, order_id):
-    if request.method == 'POST':
-        order = get_object_or_404(Order, orderID=order_id)
-        order.status = Order.StatusPesanan.SELESAI
-        order.save()
         return JsonResponse({'status': 'success'})
     else:
+        pass
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-
 
 def edit_status_batal(request, order_id):
     if request.method == 'POST':
@@ -95,7 +85,6 @@ def edit_status_batal(request, order_id):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 def update_status_batal(request):
-
     if request.method == 'POST':
         order_group_id = request.POST.get("og_id")
         order_group = OrderGroup.objects.get(pk=int(order_group_id))
