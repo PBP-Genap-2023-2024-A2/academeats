@@ -7,6 +7,6 @@ urlpatterns = [
     path('toko/<int:toko_id>', show_main_penjual, name='show_main_penjual'),
     path('', show_main_pembeli, name='show_main_pembeli'),
     path('edit_status_penjual/', edit_status_penjual, name='edit_status_penjual'),
-    path('edit_status_batal/', edit_status_batal, name='edit_status_batal'),
+    path('edit_status_batal/<int:og_id>', edit_status_batal, name='edit_status_batal'),
     path('delete/<int:order_id>', delete_order, name='delete'),
 ]
