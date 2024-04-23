@@ -7,7 +7,7 @@
 {% block content %}
     <div class="w-full min-h-screen">
         <div class="w-full px-10">
-            <form id="cart-container" method="POST">
+            <form id="cart-form" method="POST">
                 <table class="table table-fixed">
                     <!-- head -->
                     <thead>
@@ -25,7 +25,8 @@
                         <tr id="cart-row-{{ item.pk }}" class="hover">
                             <th class="flex justify-center">
                                 <label>
-                                    <input type="checkbox" class="cb-checkout checkbox" name="cart-item-{{ item.pk }}"/>
+                                    <input type="checkbox" class="cb-checkout checkbox" onchange="checkedButton(this)"
+                                           value="{{ item.pk }}" name="cart-item-{{ item.pk }}"/>
                                 </label>
                             </th>
                             <td>
@@ -47,11 +48,17 @@
                                 <br/>
                                 <span class="badge badge-ghost badge-sm">{{ item.makanan.kategori }}</span>
                             </td>
-                            <th>
-                                <button type="button" onclick="decreaseQuantity(this)" value="{{ item.pk }}">-</button>
-                                <input type="text" id="quantity-{{ item.pk }}" value="{{ item.jumlah }}" min="1"
-                                       style="width: 2vw; text-align: center;"/>
-                                <button type="button" onclick="increaseQuantity(this)" value="{{ item.pk }}">+</button>
+                            <th class="join">
+                                <button class="btn join-item" type="button" onclick="decreaseQuantity(this)"
+                                        value="{{ item.pk }}">-
+                                </button>
+                                <div>
+                                    <input class="input w-14 join-item" disabled type="text" id="quantity-{{ item.pk }}"
+                                           value="{{ item.jumlah }}" min="1"/>
+                                </div>
+                                <button class="btn join-item" type="button" onclick="increaseQuantity(this)"
+                                        value="{{ item.pk }}">+
+                                </button>
                             </th>
                             <th>
                                 <button
@@ -72,7 +79,7 @@
                         <span class="text-sm">Total:</span>
                         <span id="total-price" class="font-bold text-xl">$0</span>
                     </div>
-                    <button class="btn btn-primary grow rounded-full">
+                    <button type="button" onclick="submitForm()" class="btn btn-primary grow rounded-full">
                         Checkout
                     </button>
                 </div>
@@ -92,25 +99,40 @@
         </div>
     </div>
     <script>
-        const daftarStok = {
-
-        }
-        const harga = 0
+        const daftarKeranjang = {}
+        let hargaTotal = 0
         const hargaElement = document.getElementById('total-price')
 
         {% for item in cart %}
-            daftarStok["{{ item.pk }}"] = {{ item.makanan.stok }}
+            daftarKeranjang["{{ item.pk }}"] = {};
+
+            daftarKeranjang["{{ item.pk }}"]['stok'] = {{ item.makanan.stok }}
+            daftarKeranjang["{{ item.pk }}"]['harga'] = {{ item.makanan.harga }}
+            daftarKeranjang["{{ item.pk }}"]['jumlah'] = {{ item.jumlah }}
+            daftarKeranjang["{{ item.pk }}"]['check'] = false
         {% endfor %}
 
         function hitungTotalHarga() {
-
+            hargaTotal = 0
+            for (let item in daftarKeranjang) {
+                if (daftarKeranjang[item]['check']) {
+                    hargaTotal += daftarKeranjang[item]['harga'] * daftarKeranjang[item]['jumlah']
+                }
+            }
         }
 
         async function updateHarga() {
-            for ()
+            hitungTotalHarga()
 
-            hargaElement.innerText = `${harga}`
+            hargaElement.innerText = `${hargaTotal}`
         }
+
+        async function checkedButton(el) {
+            daftarKeranjang[el.value]['check'] = el.checked
+            await updateHarga()
+        }
+
+        updateHarga()
 
         async function deleteItem(id) {
             // 9999 is only a placeholder
@@ -122,11 +144,26 @@
             delete daftarStok[id]
         }
 
-        function decreaseQuantity(el) {
+        async function updateJumlah(id, quantity) {
+            var data = new FormData()
+            data.append('jumlah', quantity.toString())
+
+            await fetch("{% url 'keranjang:update-jumlah' keranjang_id=9999 %}".replace(/9999/, id), {
+                method: "POST",
+                body: data
+            })
+        }
+
+        async function decreaseQuantity(el) {
             let quantityInput = document.getElementById(`quantity-${el.value}`);
             let quantity = Number(quantityInput.value);
             if (quantity > 1) {
                 quantityInput.value = quantity - 1;
+                daftarKeranjang[el.value]['jumlah'] = quantity - 1;
+
+                await updateJumlah(el.value, quantity - 1)
+
+                updateHarga()
             }
         }
 
@@ -134,17 +171,38 @@
             let quantityInput = document.getElementById(`quantity-${el.value}`);
             let quantity = Number(quantityInput.value);
 
-            const data = await fetch(`{% url 'keranjang:cek_stok' keranjang_id=9999 %}`.replace(/9999/, el.value), {
-                method: "GET"
-            })
-            const stok = await data.json()
-
-            if (quantity >= stok.stok) {
+            if (quantity >= daftarKeranjang[el.value]['stok']) {
                 kelebihan_alert.showModal();
                 return
             }
 
             quantityInput.value = quantity + 1;
+            daftarKeranjang[el.value]['jumlah'] = quantity + 1;
+
+            await updateJumlah(el.value, quantity + 1)
+
+            updateHarga()
+        }
+
+        async function submitForm() {
+            var data = new FormData()
+
+            const items = []
+
+            for (const item in daftarKeranjang) {
+                if (daftarKeranjang[item]['check']) {
+                    items.push(item)
+                }
+            }
+
+            data.append('obj', JSON.stringify(items))
+            data.append('total', hargaTotal.toString())
+
+            await fetch("{% url 'keranjang:checkout-cart' %}", {
+                method: "POST",
+                body: data
+            })
+
         }
     </script>
 {% endblock content %}

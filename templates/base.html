@@ -59,6 +59,18 @@
     <main class="pt-20 grow">
         {% block content %}
         {% endblock content %}
+        <dialog id="cart_limit_modal" class="modal">
+            <div class="modal-box">
+                <h3 class="font-bold text-lg">Hello!</h3>
+                <p class="py-4">Press ESC key or click the button below to close</p>
+                <div class="modal-action">
+                    <form method="dialog">
+                        <!-- if there is a button in form, it will close the modal -->
+                        <button class="btn">Close</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
     </main>
     <footer class="mt-10 footer items-center p-6 bg-neutral text-neutral-content">
         <aside class="items-center grid-flow-col">
@@ -116,18 +128,24 @@
                 cartContainer.appendChild(card)
             })
         }
-        
+
         refreshCart();
 
-        function addToCart(event) {
+        async function addToCart(event) {
             var data = new FormData()
 
             data.append("makanan_id", event.value)
 
-            fetch("{% url 'keranjang:add-item' %}", {
+            const res = await fetch("{% url 'keranjang:add-item' %}", {
                 method: "POST",
                 body: data
-            }).then(refreshCart)
+            })
+
+            await refreshCart()
+
+            if (res.status === 400) {
+                cart_limit_modal.showModal()
+            }
         }
     </script>
 {% endblock base_content %}

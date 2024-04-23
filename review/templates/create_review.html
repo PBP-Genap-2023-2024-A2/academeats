@@ -1,5 +1,5 @@
 {% extends 'base.html' %} {% block content %}
-<h1>Add New Progress</h1>
+<h1>Tambah Review Baru</h1>
 
 <form method="POST">
   {% csrf_token %}
@@ -8,7 +8,7 @@
     <tr>
       <td></td>
       <td>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Submit" class="bg-accent rounded-full" />
       </td>
     </tr>
   </table>
