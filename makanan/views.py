@@ -35,7 +35,7 @@ def delete_makanan(request, makanan_id):
     return HttpResponseRedirect(reverse('main:index'))
 
 def edit_makanan(request, makanan_id):
-    makanan = Makanan.objects.get(pk = makanan_id)
+    makanan = Makanan.objects.get(pk=makanan_id)
 
 
     form = MakananForm(request.POST or None, instance=makanan)
@@ -43,7 +43,7 @@ def edit_makanan(request, makanan_id):
     if form.is_valid() and request.method == "POST":
        
         form.save()
-        return HttpResponseRedirect(reverse('main:index'))
+        return HttpResponseRedirect(reverse('toko:tambah_makanan'))
 
     context = {'form': form}
     return render(request, "edit_makanan.html", context)
