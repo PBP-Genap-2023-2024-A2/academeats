@@ -6,6 +6,7 @@ import json
 
 from keranjang.models import ItemKeranjang
 from makanan.models import Makanan
+from order.models import OrderGroup, Order
 
 
 def show_main(request):
@@ -33,8 +34,17 @@ def add_item(request):
         makanan = Makanan.objects.get(pk=int(makanan_id))
         user = request.user
 
-        new_item = ItemKeranjang(makanan=makanan, user=user)
-        new_item.save()
+        try:
+            item = ItemKeranjang.objects.get(makanan=makanan)
+
+            if item.jumlah >= item.makanan.stok:
+                return HttpResponse(status=400)
+
+            item.jumlah = item.jumlah + 1
+            item.save()
+        except ItemKeranjang.DoesNotExist:
+            new_item = ItemKeranjang(makanan=makanan, user=user)
+            new_item.save()
 
         return HttpResponse(b"CREATED", status=201)
 
@@ -54,15 +64,44 @@ def cek_stok(request, keranjang_id):
     stok = keranjang.makanan.stok
     return JsonResponse({'stok': stok})
 
+
 @csrf_exempt
 def checkout_cart(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        checkedout_foods = data.get('checkedout_foods', [])
+        ids = json.loads(request.POST.get('obj'))
+        total_harga = request.POST.get('total')
 
-        # Sekarang Anda memiliki list dari semua id makanan yang di-checkout
-        # Anda bisa menambahkan kode untuk memproses checkout di sini
+        order_group = OrderGroup(orderID='asdfasdf', user=request.user, total_harga=total_harga)
+        order_group.save()
+
+        for item_id in ids:
+            item = ItemKeranjang.objects.get(pk=int(item_id))
+
+            if item.jumlah > item.makanan.stok:
+                order_group.delete()
+                return HttpResponse(400)
+
+            order = Order(order_group=order_group, user=request.user, makanan=item.makanan, toko=item.makanan.toko, quantity=item.jumlah)
+            order.save()
+
+            item.makanan.stok -= item.jumlah
+            item.makanan.save()
+
+            item.delete()
 
         return JsonResponse({'message': 'Checkout successful'})
 
-    return JsonResponse({'message': 'Invalid request'}, status=400)
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
+def update_jumlah(request, keranjang_id):
+
+    if request.method == "POST":
+        keranjang = ItemKeranjang.objects.get(pk=keranjang_id)
+        keranjang.jumlah = request.POST.get('jumlah')
+        keranjang.save()
+
+        return JsonResponse({'jumlah': keranjang.jumlah})
+
+    return HttpResponseNotFound()
