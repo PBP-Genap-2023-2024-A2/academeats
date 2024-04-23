@@ -1,26 +1,25 @@
 {% extends 'base.html' %} {% block content %}
-<h1 class="text-center"><strong>Review {{ makanan.nama }}</strong></h1>
+<h1 class="text-center mb-7"><strong>Review {{ makanan.nama }}</strong></h1>
 
-  
-    <div class="row">
-      {% for review in reviews %}
-      <div class="col-sm-4">
-          <div class="card">
-              <div class="card-body">
-                  <h5 class="card-title">{{ review.user }}</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.nilai }}</h6>
-                  <div class="stars" data-nilai="{{ review.nilai }}" style="font-size: 24px;">
-                  </div>
-                  <p class="card-text">Komentar: {{ review.komentar }}</p>
-                  {% if review.reply %}
-                  <p class="card-text"><small class="text-muted">Reply: {{ review.reply }}</small></p>
-                  {% else %}
-                  <p class="card-text"><small class="text-muted">Penjual belum memberikan balasan</small></p>
-                  <a href="{% url 'review:reply_review' review.pk %}" class="btn btn-primary">Balas</a>
-                  {% endif %}
+<div class="grid grid-cols-4 gap-4 ">
+  {% for review in reviews %}
+  <div>
+      <div class="card bg-secondary">
+          <div class="card-body">
+              <h5 class="card-title">{{ review.user }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.nilai }}</h6>
+              <div class="stars" data-nilai="{{ review.nilai }}" style="font-size: 24px;">
               </div>
+              <p class="card-text">Komentar: {{ review.komentar }}</p>
+              {% if review.reply %}
+              <p class="card-text"><small class="text-muted">Reply: {{ review.reply }}</small></p>
+              {% else %}
+              <p class="card-text"><small class="text-muted">Penjual belum memberikan balasan</small></p>
+              <a href="{% url 'review:reply_review' review.pk %}" class="btn btn-primary">Balas</a>
+              {% endif %}
           </div>
       </div>
-      {% endfor %}
   </div>
-{% endblock content %}
+  {% endfor %}
+</div>
+{% endblock %}
