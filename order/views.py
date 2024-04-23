@@ -33,7 +33,7 @@ def show_main_pembeli(request):
     for og in order_group:
         o = orders.filter(order_group = og)
 
-        order_list.append({'pk': og.pk, 'id': og.orderID, 'orders': o, 'status': aggregat_status(o)})
+        order_list.append({'pk': og.pk, 'total_harga': og.total_harga, 'orders': o, 'status': aggregat_status(o)})
 
     context = {
         'order_group': order_list,
