@@ -1,26 +1,26 @@
 {% extends 'base.html' %} {% block content %}
-<h1>Review</h1>
+<h1 class="text-center"><strong>Review {{ makanan.nama }}</strong></h1>
 
-<table>
-    <tr>
-      <th>Username</th>
-      <th>Nilai</th>
-      <th>Komentar</th>
-      <th>Balasan</th>
-    </tr>
   
-    {% for review in reviews %}
-    <tr>
-      <td>{{ name }}</td>
-      <td>{{review.nilai}}</td>
-      <td>{{review.komentar}}</td>
-      {% if review.reply%}
-        <td>{{review.reply}}</td>
-      {% else %}
-      <td>(Penjual Belum memberikan reply)</td>
-      {% endif %}
-      
-    </tr>
-    {% endfor %}
-  </table>
+    <div class="row">
+      {% for review in reviews %}
+      <div class="col-sm-4">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title">{{ review.user }}</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.nilai }}</h6>
+                  <div class="stars" data-nilai="{{ review.nilai }}" style="font-size: 24px;">
+                  </div>
+                  <p class="card-text">Komentar: {{ review.komentar }}</p>
+                  {% if review.reply %}
+                  <p class="card-text"><small class="text-muted">Reply: {{ review.reply }}</small></p>
+                  {% else %}
+                  <p class="card-text"><small class="text-muted">Penjual belum memberikan balasan</small></p>
+                  <a href="{% url 'review:reply_review' review.pk %}" class="btn btn-primary">Balas</a>
+                  {% endif %}
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+  </div>
 {% endblock content %}
