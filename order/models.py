@@ -7,7 +7,6 @@ from toko.models import Toko
 
 class OrderGroup(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
-    orderID = models.CharField(max_length=100, unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_harga = models.FloatField()
 

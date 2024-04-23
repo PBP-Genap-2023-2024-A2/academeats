@@ -71,7 +71,7 @@ def checkout_cart(request):
         ids = json.loads(request.POST.get('obj'))
         total_harga = request.POST.get('total')
 
-        order_group = OrderGroup(orderID='asdfasdf', user=request.user, total_harga=total_harga)
+        order_group = OrderGroup(user=request.user, total_harga=total_harga)
         order_group.save()
 
         for item_id in ids:
