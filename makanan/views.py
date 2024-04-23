@@ -43,7 +43,7 @@ def edit_makanan(request, makanan_id):
 
     if form.is_valid() and request.method == "POST":
         form.save()
-        return HttpResponseRedirect(reverse('main:index'))
+        return HttpResponseRedirect(reverse('toko:tambah_makanan'))
 
     context = {'form': form}
     return render(request, "edit_makanan.html", context)
