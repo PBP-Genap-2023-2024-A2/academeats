@@ -87,6 +87,7 @@ def profile_page(request, username):
 
     return render(request, 'profile.html', context={'profile': profile})
 
+
 def edit_profile(request, username):
     user = User.objects.get(username=username)
     profile = Profile.objects.get(user=user)

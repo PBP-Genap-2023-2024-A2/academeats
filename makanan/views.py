@@ -12,10 +12,11 @@ def detail_makanan(request, makanan_id):
 
     return render(request, "detail_makanan.html", {'makanan': makanan})
 
-  
+
 def get_stok(request):
     makanan = Makanan.objects.get(pk=request.GET.get('makanan_id'))
     return render(request, 'get_stok.html', {'makanan': makanan})
+
 
 def show_makanan(request):
     makanan = Makanan.objects.all()
@@ -34,17 +35,15 @@ def delete_makanan(request, makanan_id):
     makanan.delete()
     return HttpResponseRedirect(reverse('main:index'))
 
-def edit_makanan(request, makanan_id):
-    makanan = Makanan.objects.get(pk = makanan_id)
 
+def edit_makanan(request, makanan_id):
+    makanan = Makanan.objects.get(pk=makanan_id)
 
     form = MakananForm(request.POST or None, instance=makanan)
 
     if form.is_valid() and request.method == "POST":
-       
         form.save()
         return HttpResponseRedirect(reverse('main:index'))
 
     context = {'form': form}
     return render(request, "edit_makanan.html", context)
-  
