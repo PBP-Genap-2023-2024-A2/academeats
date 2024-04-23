@@ -44,14 +44,15 @@ def add_item(request):
 @csrf_exempt
 def delete_item(request, keranjang_id):
 
-    if request.method == 'DELETE':
-        ItemKeranjang.objects.get(pk=keranjang_id).delete()
+    ItemKeranjang.objects.get(pk=keranjang_id).delete()
 
-        return HttpResponse(b"DELETED", status=200)
-
-    return HttpResponseNotFound()
+    return HttpResponse(b"DELETED", status=200)
 
 
+def cek_stok(request, keranjang_id):
+    keranjang = ItemKeranjang.objects.get(pk=keranjang_id)
+    stok = keranjang.makanan.stok
+    return JsonResponse({'stok': stok})
 
 @csrf_exempt
 def checkout_cart(request):

@@ -1,72 +1,150 @@
 {% extends 'base.html' %}
 
 {% block meta %}
-<title>Cart</title>
-{% endblock meta %} 
-
+    <title>Cart</title>
+{% endblock meta %}
 
 {% block content %}
-<div class="overflow-x-auto">
-  <table class="table">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th>
-        </th>
-        <th>Menu</th>
-        <th>Harga</th>
-        <th>Quantity</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in cart %}
-      <tr>
-        <th>
-          <label>
-            <input type="checkbox" class="checkbox" />
-          </label>
-        </th>
-        <td>
-          <div class="flex items-center gap-3">
-            <div class="avatar">
-              <div class="mask mask-squircle w-12 h-12">
-                <img src="/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
-              </div>
-            </div>
-            <div>
-              <div class="font-bold">{{item.makanan.nama}}</div>
-              <div class="text-sm opacity-50">{{item.makanan.toko}}</div>
-            </div>
-          </div>
-        </td>
-        <td>
-          {{item.makanan.harga}}
-          <br/>
-          <span class="badge badge-ghost badge-sm">{{item.makanan.kategori}}</span>
-        </td>
-        <th>
-          <button onclick="decreaseQuantity()">-</button>
-              <input type="text" id="quantity" value="{{ item.jumlah }}" min="1" style="width: 2vw; text-align: center;">
-          <button onclick="increaseQuantity()">+</button>
-        </th>
-      </tr>
-      {% endfor %}
-  </table>
-</div>
-<script>
-  function decreaseQuantity() {
-      var quantityInput = document.getElementById('quantity');
-      var quantity = Number(quantityInput.value);
-      if (quantity > 1) {
-          quantityInput.value = quantity - 1;
-      }
-  }
+    <div class="w-full min-h-screen">
+        <div class="w-full px-10">
+            <form id="cart-container" method="POST">
+                <table class="table table-fixed">
+                    <!-- head -->
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Menu</th>
+                        <th>Harga</th>
+                        <th>Quantity</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% csrf_token %}
+                    {% for item in cart %}
+                        <tr id="cart-row-{{ item.pk }}" class="hover">
+                            <th class="flex justify-center">
+                                <label>
+                                    <input type="checkbox" class="cb-checkout checkbox" name="cart-item-{{ item.pk }}"/>
+                                </label>
+                            </th>
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle w-12 h-12">
+                                            <img src="/tailwind-css-component-profile-2@56w.png"
+                                                 alt="Avatar Tailwind CSS Component"/>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="font-bold">{{ item.makanan.nama }}</div>
+                                        <div class="text-sm opacity-50">{{ item.makanan.toko }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {{ item.makanan.harga }}
+                                <br/>
+                                <span class="badge badge-ghost badge-sm">{{ item.makanan.kategori }}</span>
+                            </td>
+                            <th>
+                                <button type="button" onclick="decreaseQuantity(this)" value="{{ item.pk }}">-</button>
+                                <input type="text" id="quantity-{{ item.pk }}" value="{{ item.jumlah }}" min="1"
+                                       style="width: 2vw; text-align: center;"/>
+                                <button type="button" onclick="increaseQuantity(this)" value="{{ item.pk }}">+</button>
+                            </th>
+                            <th>
+                                <button
+                                        onclick="deleteItem(this.value)"
+                                        type="button"
+                                        value="{{ item.pk }}"
+                                        class="btn flex justify-center items-center btn-square bg-transparent border-transparent"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </th>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="flex items-center float-end w-1/3 mt-5 mr-16 gap-10">
+                    <div class="flex flex-col">
+                        <span class="text-sm">Total:</span>
+                        <span id="total-price" class="font-bold text-xl">$0</span>
+                    </div>
+                    <button class="btn btn-primary grow rounded-full">
+                        Checkout
+                    </button>
+                </div>
+            </form>
+            <dialog id="kelebihan_alert" class="modal">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg">Hello!</h3>
+                    <p class="py-4">Press ESC key or click the button below to close</p>
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <!-- if there is a button in form, it will close the modal -->
+                            <button class="btn">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
+        </div>
+    </div>
+    <script>
+        const daftarStok = {
 
-  function increaseQuantity() {
-      var quantityInput = document.getElementById('quantity');
-      var quantity = Number(quantityInput.value);
-      quantityInput.value = quantity + 1;
-  }
-</script>
+        }
+        const harga = 0
+        const hargaElement = document.getElementById('total-price')
+
+        {% for item in cart %}
+            daftarStok["{{ item.pk }}"] = {{ item.makanan.stok }}
+        {% endfor %}
+
+        function hitungTotalHarga() {
+
+        }
+
+        async function updateHarga() {
+            for ()
+
+            hargaElement.innerText = `${harga}`
+        }
+
+        async function deleteItem(id) {
+            // 9999 is only a placeholder
+            await fetch(`{% url 'keranjang:delete-item' keranjang_id=9999 %}`.replace(/9999/, id), {
+                method: "DELETE"
+            })
+
+            document.getElementById(`cart-row-${id}`).remove()
+            delete daftarStok[id]
+        }
+
+        function decreaseQuantity(el) {
+            let quantityInput = document.getElementById(`quantity-${el.value}`);
+            let quantity = Number(quantityInput.value);
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+            }
+        }
+
+        async function increaseQuantity(el) {
+            let quantityInput = document.getElementById(`quantity-${el.value}`);
+            let quantity = Number(quantityInput.value);
+
+            const data = await fetch(`{% url 'keranjang:cek_stok' keranjang_id=9999 %}`.replace(/9999/, el.value), {
+                method: "GET"
+            })
+            const stok = await data.json()
+
+            if (quantity >= stok.stok) {
+                kelebihan_alert.showModal();
+                return
+            }
+
+            quantityInput.value = quantity + 1;
+        }
+    </script>
 {% endblock content %}
