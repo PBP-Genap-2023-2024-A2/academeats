@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from review.forms import ReviewForm, ReplyForm
-from review.models import Review, Order, Makanan
+from review.models import Review, Order, Makanan, User
+from toko.models import Toko
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 
 # Create your views here.
@@ -44,12 +45,17 @@ def reply_review(request, review_id):
 
     # Set book sebagai instance dari form
     form = ReplyForm(request.POST or None, instance=review)
+    user = request.user
+    toko = Toko.objects.get(user=user)
 
     if form.is_valid() and request.method == "POST":
         # Simpan form dan kembali ke halaman awal
         form.save()
         return HttpResponseRedirect(reverse('review:show_review', args=[review.makanan.id]))
 
-    context = {'form': form}
+    context = {
+                'form': form,
+                'toko': toko
+                }
     return render(request, "reply_review.html", context)
     

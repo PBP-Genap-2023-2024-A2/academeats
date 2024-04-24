@@ -7,8 +7,9 @@ import json
 from keranjang.models import ItemKeranjang
 from makanan.models import Makanan
 from order.models import OrderGroup, Order
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def show_main(request):
     cart = ItemKeranjang.objects.all()
 
