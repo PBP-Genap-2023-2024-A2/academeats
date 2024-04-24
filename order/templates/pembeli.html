@@ -12,9 +12,10 @@
 
       {% for og in order_group %}
       <div
-        id="order_card_{{og.order.pk}}"
+        id="og_card_{{og.pk}}"
         class="card h-fit bg-primary text-primary-content"
-      >
+        value="{{o}}"
+      > 
         <div class="card-body">
 
           <div class="flex flex-row justify-between items-center">
@@ -23,7 +24,7 @@
           </div>
           {% for order in og.orders %}
 
-          <div class="card h-fit bg-base-content text-primary-content border-2 border-primary-content">
+          <div class="card h-fit bg-base-content text-primary-content border-2 border-primary-content" id="order_card_{{og.pk}}">
             <div class="card-body">
               <h2 class="card-title text-2xl">{{ order.makanan.nama }}</h2>
               <div class="flex flex-row justify-between">
@@ -34,6 +35,9 @@
               <a
                 href="{% url 'review:create_review' makanan_id=order.makanan.pk %}"
                 class="btn bg-primary-content hover:scale-105"
+                id="review_btn_{{order.pk}}"
+                value="{{order.pk}}"
+                onclick="allowReview(this)"
                 >Review</a
               >
             </div>
@@ -63,7 +67,7 @@
           </div>
           <button
             type="button"
-            class="btn w-full mt-8 py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-[#FF4500] hover:bg-[#FF4700] outline-none"
+            class="btn w-full mt-8 py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-500 outline-none"
             id="status_btn"
             value="{{og.pk}}"
             onclick="batalkanPesanan(this)"
@@ -90,16 +94,23 @@
     );
 
     el.classList.add("btn-disabled");
+    const ogCard = document.getElementById(`og_card_${el.value}`)
+    const orderCard = document.getElementById(`order_card_${el.value}`)
+    const 
+    ogCard.classList.remove("bg-primary")
+    ogCard.classList.add("bg-primary/50")
+    orderCard.classList.remove("bg-base-content")
+    orderCard.classList.add("bg-base-content/0")
   }
   
-  async function allowReview(el, status) {
-    const reviewButton = document.getElementById(`review_button_${el.value}`);
-    if (status === "SELESAI") {
-      element.style.display = "block";
+  async function allowReview(el) {
+    const reviewButton = document.getElementById(`review_btn_${el.value}`);
+    if (el.value === "SELESAI") {
+      el.style.display = "block";
       console.log("halo bg");
     }
     else {
-      element.style.display = "none";
+      el.style.display = "none";
       console.log("kiw");
     }
   } 
