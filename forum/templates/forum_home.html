@@ -32,7 +32,7 @@
                                     {% endfor %}
                                 </div>
                                 <span>
-                                    <a class="font-bold">{{ forum.kreator }}</a>
+                                    <a href="{% url 'user-profile:' %}" class="font-bold">{{ forum.kreator }}</a>
                                     <span>membuat forum pada <span id="waktu-{{ forum.pk }}">{{ forum.created_at }}</span></span>
                                 </span>
                             </div>
