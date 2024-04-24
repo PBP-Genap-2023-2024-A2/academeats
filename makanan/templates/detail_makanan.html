@@ -27,10 +27,15 @@
                     </div>
                 </div>
                 <p class="mt-5 text-lg">{{ makanan.deskripsi }}</p>
-
-                <button class="btn btn-primary max-w-xs mt-5 self-end" value="{{ makanan.pk }}" onclick="addToCart(this)">
-                    Tambahkan ke Keranjang
-                </button>
+                {% if is_penjual == True %}
+                    <a href="{% url 'makanan:edit' makanan_id=makanan.pk %}" class="btn btn-primary max-w-xs mt-5 self-end"                                                                 `                                                                                       aria-required="false"                                                                                                                                               a>
+                        Edit Makanan
+                    </a>
+                {% else %}
+                    <button class="btn btn-primary max-w-xs mt-5 self-end" value="{{ makanan.pk }}" onclick="addToCart(this)">
+                        Tambahkan ke Keranjang
+                    </button>
+                {% endif %}
             </section>
         </div>
         <div class="">

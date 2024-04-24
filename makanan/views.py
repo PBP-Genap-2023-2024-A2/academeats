@@ -11,12 +11,20 @@ from django.urls import reverse
 def detail_makanan(request, makanan_id):
     makanan = Makanan.objects.get(pk=makanan_id)
     reviews = Review.objects.filter(makanan=makanan)
+    is_penjual = False
+
+    try:
+        toko = Toko.objects.get(user=request.user)
+        if toko == makanan.toko:
+            is_penjual = True
+    except Toko.DoesNotExist:
+        pass
 
     rating = 0
     count = 0
 
     for review in reviews:
-        rating += review.rating
+        rating += review.nilai
         count += 1
 
     if count != 0:
@@ -25,7 +33,8 @@ def detail_makanan(request, makanan_id):
     context = {
         'makanan': makanan,
         'reviews': reviews,
-        'rating': rating
+        'rating': rating,
+        'is_penjual': is_penjual
     }
 
     return render(request, "detail_makanan.html", context)
@@ -61,7 +70,7 @@ def edit_makanan(request, makanan_id):
 
     if form.is_valid() and request.method == "POST":
         form.save()
-        return HttpResponseRedirect(reverse('toko:tambah_makanan'))
+        return HttpResponseRedirect(reverse('makanan:detail', args=[makanan.id]))
 
     context = {'form': form}
     return render(request, "edit_makanan.html", context)
