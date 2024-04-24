@@ -1,6 +1,7 @@
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from makanan.models import Makanan
+from review.models import Review
 from toko.models import Toko
 from makanan.forms import MakananForm
 from django.http import HttpResponseRedirect
@@ -9,8 +10,25 @@ from django.urls import reverse
 
 def detail_makanan(request, makanan_id):
     makanan = Makanan.objects.get(pk=makanan_id)
+    reviews = Review.objects.filter(makanan=makanan)
 
-    return render(request, "detail_makanan.html", {'makanan': makanan})
+    rating = 0
+    count = 0
+
+    for review in reviews:
+        rating += review.rating
+        count += 1
+
+    if count != 0:
+        rating /= count
+
+    context = {
+        'makanan': makanan,
+        'reviews': reviews,
+        'rating': rating
+    }
+
+    return render(request, "detail_makanan.html", context)
 
 
 def get_stok(request):
