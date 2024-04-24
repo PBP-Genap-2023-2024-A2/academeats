@@ -16,7 +16,7 @@
                 <h2 class="text-5xl font-semibold">{{ makanan.nama }}</h2>
                 <div class="text-1xl font-thin">
                     <i class="fa-solid fa-star"></i>
-                    <span>({{ rating }})</span>
+                    <span>({{ rating|floatformat:1 }})</span>
                 </div>
 
                 <h3 class="text-2xl font-bold mt-5">Rp{{ makanan.harga }}</h3>
@@ -42,12 +42,22 @@
             <h3 class="text-xl font-bold">Reviews</h3>
             <div>
                 {% for review in reviews %}
-                    <div class="card w-96 bg-primary text-primary-content">
-                        <div class="card-body">
-                            <h2 class="card-title">Card title!</h2>
-                            <p>If a dog chews shoes whose shoes does he choose?</p>
-                            <div class="card-actions justify-end">
-                                <button class="btn">Buy Now</button>
+                    <div class="mb-5 mt-5">
+                        <div class="card bg-secondary">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ review.user }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.nilai }}</h6>
+                                <div class="stars" data-nilai="{{ review.nilai }}" style="font-size: 24px;">
+                                </div>
+                                <p class="card-text">Komentar: {{ review.komentar }}</p>
+                                {% if review.reply %}
+                                <p class="card-text"><small class="text-muted">Reply: {{ review.reply }}</small></p>
+                                {% else %}
+                                <p class="card-text"><small class="text-muted">Penjual belum memberikan balasan</small></p>
+                                {% if user.profile.role == 'penjual' and toko.pk == review.makanan.toko.pk %}
+                                    <a href="{% url 'review:reply_review' review.pk %}" class="btn btn-primary">Balas</a>
+                                {% endif %}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
