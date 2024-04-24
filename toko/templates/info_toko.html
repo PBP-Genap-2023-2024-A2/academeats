@@ -9,7 +9,7 @@
         <h1 class="text-xl font-semibold mb-5">Menu</h1>
         <div class="w-full grid grid-cols-5 gap-10">
             {% for makanan in menu %}
-                <div class="card h-fit bg-primary text-primary-content">
+                <a href="{% url 'makanan:detail' makanan_id=makanan.pk %}" class="card h-fit bg-primary text-primary-content hover:scale-[1.05] transition-all">
                     <figure>
                         <img src="{{ makanan.img_url }}" alt="car!"/>
                     </figure>
@@ -22,7 +22,7 @@
                             </button>
                         </div>
                     </div>
-                </div>
+                </a>
             {% endfor %}
         </div>
     </main>
