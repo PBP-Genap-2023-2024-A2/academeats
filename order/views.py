@@ -19,11 +19,9 @@ def show_main_penjual(request, toko_id):
 
     context = {
         'orders': orders,
-        'jumlah_pesanan': pesanan_cnt,
     }
 
     return render(request, "penjual.html", context)
-
 
 def show_main_pembeli(request):
     orders = Order.objects.all()
@@ -42,10 +40,9 @@ def show_main_pembeli(request):
 
     return render(request, "pembeli.html", context)
 
-
-def order_id_generator(order):
-    orderID = order.user.username.upper()[:5] + order.toko.name.upper()[:5]  # ???
-    date_added = order.date_added.split()
+def order_id_generator(og):
+    orderID = og.user.username.upper()[:5] + og.toko.name.upper()[:5]  # ???
+    date_added = og.date_added.split()
     date = date_added[0][:11]
     orderID += date.replace("-", "")
     checksum = 0
@@ -54,7 +51,6 @@ def order_id_generator(order):
 
     orderID += (checksum % 10)
     return orderID
-
 
 @csrf_exempt
 def edit_status_penjual(request):
@@ -83,15 +79,6 @@ def edit_status_batal(request, og_id):
         order.save()
 
     return HttpResponse(status=200)
-
-def delete_order(request, order_id):
-    order = Order.objects.get(order_id)
-
-    print(order)
-
-    order.delete()
-
-    return HttpResponse('DELETED')
 
 
 # HELPER FUNCTION
