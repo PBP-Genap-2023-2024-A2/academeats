@@ -20,7 +20,7 @@ def forum_home(request):
         'forum_dibuat': forum_dibuat
     }
 
-    return render(request,  'home.html', context)
+    return render(request,  'forum_home.html', context)
 
 
 def create_new_forum(request):
