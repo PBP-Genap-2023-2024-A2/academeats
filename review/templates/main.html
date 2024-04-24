@@ -15,7 +15,11 @@
               <p class="card-text"><small class="text-muted">Reply: {{ review.reply }}</small></p>
               {% else %}
               <p class="card-text"><small class="text-muted">Penjual belum memberikan balasan</small></p>
-              <a href="{% url 'review:reply_review' review.pk %}" class="btn btn-primary">Balas</a>
+                {% if user.is_authenticated and user.profile.role == 'penjual' %}
+                    <a href="{% url 'review:reply_review' review.pk %}" class="btn btn-primary">Balas</a>
+                {% else %}
+                    <p class="card-text"><small class="text-muted">Anda harus login sebagai penjual untuk memberikan balasan</small></p>
+                {% endif %}
               {% endif %}
           </div>
       </div>
