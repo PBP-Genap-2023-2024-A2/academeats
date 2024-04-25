@@ -1,6 +1,4 @@
-{% extends 'base.html' %} 
-{% block content %}
-
+{% extends 'base.html' %} {% block content %}
 
 <div class="w-full min-h-screen flex">
   <div class="divider divider-horizontal"></div>
@@ -9,29 +7,31 @@
       <h2 class="text-3xl font-bold">Order List</h2>
     </div>
     <section class="grid grid-cols-2 gap-10">
-
+      <!-- start of ogcard -->
       {% for og in order_group %}
       <div
         id="og_card_{{og.pk}}"
         class="card h-fit bg-primary text-primary-content"
         value="{{o}}"
-      > 
+      >
         <div class="card-body">
-
           <div class="flex flex-row justify-between items-center">
             <h2 class="card-title text-xl pl-1">Order ID: {{ og.pk }}</h2>
             <h3 class="font-semibold mr-4 p-0">{{ og.user }}</h3>
           </div>
           {% for order in og.orders %}
-
-          <div class="card h-fit bg-base-content text-primary-content border-2 border-primary-content" id="order_card_{{og.pk}}">
+          <!-- start of ordercard -->
+          <section
+            class="card h-fit bg-base-content text-primary-content border-2 border-primary-content"
+            id="order_card_{{og.pk}}"
+          >
             <div class="card-body">
               <h2 class="card-title text-2xl">{{ order.makanan.nama }}</h2>
               <div class="flex flex-row justify-between">
                 <h3 class="text-neutral font-semibold">Toko {{ order.toko }}</h3>
                 <h2 class="font-semibold pb-5">Jumlah: {{ order.quantity }}</h2>
               </div>
-              
+              {% if order.status == "SELESAI" %}
               <a
                 href="{% url 'review:create_review' makanan_id=order.makanan.pk %}"
                 class="btn bg-primary-content hover:scale-105"
@@ -40,21 +40,26 @@
                 onclick="allowReview(this)"
                 >Review</a
               >
+              {% endif %}
             </div>
-          </div>  
-        {% endfor %}
+          </section>
+          <!-- end of ordercard -->
+          {% endfor %}
         </div>
+        <!-- end of ogcard -->
         <div class="flex justify-between items-center">
           <div class="flex flex-col">
             <div class="w-8 h-8 bg-base-100 rounded-tr-full"></div>
             <div class="w-8 h-8 bg-base-100 rounded-br-full"></div>
           </div>
-          <div class="border-t-4 space-x-4 border-dashed border-base-100 flex-grow"></div>
+          <div
+            class="border-t-4 space-x-4 border-dashed border-base-100 flex-grow"
+          ></div>
           <div class="flex flex-col">
             <div class="w-8 h-8 bg-base-100 rounded-tl-full"></div>
             <div class="w-8 h-8 bg-base-100 rounded-bl-full"></div>
           </div>
-        </div>  
+        </div>
         <div class="w-full p-8">
           <div class="flex flex-row justify-between font-bold">
             <h3>TOTAL</h3>
@@ -68,7 +73,7 @@
           <button
             type="button"
             class="btn w-full mt-8 py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-500 outline-none"
-            id="status_btn"
+            id="status_btn_{{og.pk}}"
             value="{{og.pk}}"
             onclick="batalkanPesanan(this)"
           >
@@ -82,6 +87,27 @@
 </div>
 
 <script>
+  async function updateCard(el, status) { // el nya status_btn aja
+    const ogCard = document.getElementById(`og_card_${el.value}`);
+    const orderCards = document.querySelectorAll(`#og_card_${el.value} > div > section`)
+    if (status === "DIBATALKAN") {
+      ogCard.classList.remove("bg-primary");
+      ogCard.classList.add("bg-primary/50");
+      orderCards.forEach(orderCard => {
+        orderCard.classList.remove("bg-base-content");
+        orderCard.classList.add("bg-base-content/0");
+      })
+      el.classList.add("btn-disabled")
+    }
+    else if (status === "SELESAI") {
+      el.classList.add("btn-disabled")
+    }
+  }
+
+  {% for og in order_group %}
+    updateCard(document.getElementById('status_btn_{{og.pk}}'), "{{og.status}}")
+  {% endfor %}
+
   async function batalkanPesanan(el) {
     await fetch(
       '{% url "order:edit_status_batal" og_id=9999 %}'.replace(
@@ -93,26 +119,18 @@
       }
     );
 
-    el.classList.add("btn-disabled");
-    const ogCard = document.getElementById(`og_card_${el.value}`)
-    const orderCard = document.getElementById(`order_card_${el.value}`)
-    const 
-    ogCard.classList.remove("bg-primary")
-    ogCard.classList.add("bg-primary/50")
-    orderCard.classList.remove("bg-base-content")
-    orderCard.classList.add("bg-base-content/0")
+    updateCard(el, 'DIBATALKAN')
   }
-  
+
   async function allowReview(el) {
     const reviewButton = document.getElementById(`review_btn_${el.value}`);
     if (el.value === "SELESAI") {
-      el.style.display = "block";
+      reviewButton.style.display = "block";
       console.log("halo bg");
-    }
-    else {
-      el.style.display = "none";
+    } else {
+      reviewButton.style.display = "none";
       console.log("kiw");
     }
-  } 
+  }
 </script>
 {% endblock content %}
