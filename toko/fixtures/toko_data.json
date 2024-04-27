@@ -1,0 +1,82 @@
+[
+  {
+    "model": "toko.Toko",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 1"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 2"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 3,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 3"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 4,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 4"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 5,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 5"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 6,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 6"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 7,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 7"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 8,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 8"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 9,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 9"
+    }
+  },
+  {
+    "model": "toko.Toko",
+    "pk": 10,
+    "fields": {
+      "user": 1,
+      "name": "Dummy Toko 10"
+    }
+  }
+]
