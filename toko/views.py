@@ -1,13 +1,10 @@
-from django.core import serializers
-from django.http import HttpResponse
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.urls import reverse
 
 from makanan.forms import MakananForm
-from makanan.models import Makanan, Kategori
+from makanan.models import Makanan
 from toko.forms import TokoForm
 from toko.models import Toko
-from user_profile.models import Profile
 
 
 def manage_toko(request):
@@ -60,7 +57,6 @@ def tambah_makanan(request, toko_id):
         makanan = form.save(commit=False)
 
         makanan.toko = toko
-        makanan.kategori = Kategori.objects.get(pk=int(form.cleaned_data.get("kategori")))
         makanan.save()
         return redirect('toko:info_toko', toko_id=toko_id)
 

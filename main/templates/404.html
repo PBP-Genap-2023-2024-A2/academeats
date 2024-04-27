@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>AcademEats | Not Found</title>
+{% endblock %}
+
+{% block content %}
+	<div class="w-full grow flex flex-col justify-center items-center gap-4 pt-20">
+        <i class="fa-regular fa-compass text-[100px]"></i>
+        <h1 class="text-3xl font-semibold">404 | Laman tidak ditemukan</h1>
+        <a href="{% url 'main:index' %}" class="btn btn-primary btn-sm mt-5">Kembali ke Laman Utama</a>
+    </div>
+{% endblock %}
