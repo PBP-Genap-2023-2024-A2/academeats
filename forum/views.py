@@ -6,7 +6,12 @@ from forum.models import Forum, Kategori
 
 # @login_required(login_url='user-profile:login-user')
 def forum_home(request):
-    forums = Forum.objects.all().order_by('judul')
+
+    if request.GET.get("q"):
+        forums = Forum.objects.filter(judul__contains=request.GET.get("q"))
+    else:
+        forums = Forum.objects.all().order_by('judul')
+
     categories = Kategori.objects.all()
     paginator = Paginator(forums, 10)
     forum_dibuat = Forum.objects.filter(kreator=request.user).order_by('pk')[:5]

@@ -8,11 +8,11 @@
     {% if menu %}
     <main class="w-full min-h-screen p-14">
         <h1 class="text-xl font-semibold mb-5">Menu</h1>
-        <div class="w-full grid grid-cols-5 gap-10">
+        <div class="w-full grid grid-cols-3 gap-10 justify-center">
             {% for makanan in menu %}
-                <a href="{% url 'makanan:detail' makanan_id=makanan.pk %}" class="card h-fit bg-primary text-primary-content hover:scale-[1.05] transition-all">
-                    <figure>
-                        <img src="{{ makanan.img_url }}" alt="car!"/>
+                <a href="{% url 'makanan:detail' makanan_id=makanan.pk %}" class="card card-side h-fit bg-primary text-primary-content hover:scale-[1.05] transition-all">
+                    <figure class="max-w-[60%] aspect-square">
+                        <img src="{{ makanan.img_url }}" alt="car!" class="h-full object-cover"/>
                     </figure>
                     <div class="card-body">
                         <h2 class="card-title">{{ makanan.nama }}</h2>
