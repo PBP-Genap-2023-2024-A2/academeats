@@ -107,3 +107,9 @@ def update_jumlah(request, keranjang_id):
         return JsonResponse({'jumlah': keranjang.jumlah})
 
     return HttpResponseNotFound()
+
+
+@csrf_exempt
+def cek_jumlah_item(request):
+    item_keranjang = ItemKeranjang.objects.filter(user=request.user)
+    return HttpResponse(len(item_keranjang))
