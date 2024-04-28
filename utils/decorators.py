@@ -14,11 +14,15 @@ def penjual_only(function):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('user-profile:login'))
 
-        profile = request.user.profile
-        if profile.role == Profile.Role.PENJUAL:
-            return function(request, *args, **kwargs)
-        else:
-            return render(request, '403.html', {})
+        try:
+            profile = Profile.objects.get(user=request.user)
+            if profile.role == Profile.Role.PENJUAL:
+                return function(request, *args, **kwargs)
+            else:
+                return render(request, '403.html', {})
+
+        except Profile.DoesNotExist:
+            return HttpResponseRedirect(reverse('user-profile:create-profile'))
 
     return wrapper
 
@@ -30,10 +34,16 @@ def pembeli_only(function):
         if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('user-profile:login'))
 
-        profile = request.user.profile
-        if profile.role == Profile.Role.PEMBELI:
-            return function(request, *args, **kwargs)
-        else:
-            return render(request, '403.html', {})
+        try:
+            profile = Profile.objects.get(user=request.user)
+            if profile.role == Profile.Role.PEMBELI:
+                return function(request, *args, **kwargs)
+            else:
+                return render(request, '403.html', {})
+
+        except Profile.DoesNotExist:
+            return HttpResponseRedirect(reverse('user-profile:create-profile'))
 
     return wrapper
+
+
