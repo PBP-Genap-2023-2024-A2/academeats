@@ -5,8 +5,9 @@ from makanan.forms import MakananForm
 from makanan.models import Makanan
 from toko.forms import TokoForm
 from toko.models import Toko
+from utils.decorators import penjual_only
 
-
+@penjual_only
 def manage_toko(request):
     toko = Toko.objects.filter(user=request.user)
 
@@ -23,7 +24,7 @@ def info_toko(request, toko_id):
 
     return render(request, 'info_toko.html', context)
 
-
+@penjual_only
 def create_toko(request):
     form = TokoForm(request.POST or None)
 
@@ -36,7 +37,7 @@ def create_toko(request):
     context = {'form': form}
     return render(request, 'create_toko.html', context)
 
-
+@penjual_only
 def edit_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     form = TokoForm(request.POST or None, instance=toko)
@@ -48,7 +49,7 @@ def edit_toko(request, toko_id):
     context = {'form': form}
     return render(request, "edit_toko.html", context)
 
-
+@penjual_only
 def tambah_makanan(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     form = MakananForm(request.POST or None)

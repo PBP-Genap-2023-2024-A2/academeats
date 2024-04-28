@@ -4,6 +4,8 @@ from review.forms import ReviewForm, ReplyForm
 from review.models import Review, Order, Makanan, User
 from toko.models import Toko
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from utils.decorators import penjual_only, pembeli_only
+
 
 # Create your views here.
 
@@ -26,18 +28,39 @@ def create_review(request, makanan_id):
     context = {'form': form}
     return render(request, "create_review.html", context)
 
-def show_review(request, makanan_id):
+@penjual_only
+def show_review_penjual(request, makanan_id):
     try:
        makanan_dipilih = Makanan.objects.get(pk=makanan_id)
     except Makanan.DoesNotExist:
-        return render(request, "error.html", {"message": "Toko does not exist."})
+        return render(request, "error.html", {"message": "Makanan does not exist."})
+    toko_dipilih = Toko.objects.filter(user=request.user)
+    for toko in toko_dipilih:
+        if toko == makanan_dipilih.toko:
+            break
+    else:
+        return render(request, "403.html", {})
+    
+    reviews = Review.objects.filter(makanan=makanan_dipilih)
+    context = {
+        'reviews': reviews,
+        'makanan': makanan_dipilih,
+        'toko': toko_dipilih
+    }
+    return render(request, "main.html", context)
+
+@pembeli_only
+def show_review_pembeli(request, makanan_id):
+    try:
+       makanan_dipilih = Makanan.objects.get(pk=makanan_id)
+    except Makanan.DoesNotExist:
+        return render(request, "error.html", {"message": "Makanan does not exist."})
     reviews = Review.objects.filter(makanan=makanan_dipilih)
     context = {
         'reviews': reviews,
         'makanan': makanan_dipilih
     }
     return render(request, "main.html", context)
-
 
 def reply_review(request, review_id):
     # Get review berdasarkan ID
@@ -51,7 +74,7 @@ def reply_review(request, review_id):
     if form.is_valid() and request.method == "POST":
         # Simpan form dan kembali ke halaman awal
         form.save()
-        return HttpResponseRedirect(reverse('review:show_review', args=[review.makanan.id]))
+        return HttpResponseRedirect(reverse('review:show_review_penjual', args=[review.makanan.id]))
 
     context = {
                 'form': form,
