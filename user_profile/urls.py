@@ -4,7 +4,7 @@ from django.urls import path
 from user_profile import views
 
 urlpatterns = [
-    path('profile/<slug:username>', views.profile_page, name='profile'),
+    path('<slug:username>', views.profile_page, name='profile'),
     path('register/', views.register, name='register'),
     path('create-profile/', views.create_profile, name='create-profile'),
     path('edit-profile/<slug:username>', views.edit_profile, name='edit-profile'),

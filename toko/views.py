@@ -1,3 +1,5 @@
+import environ
+import requests
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.urls import reverse
 
@@ -6,6 +8,7 @@ from makanan.models import Makanan
 from toko.forms import TokoForm
 from toko.models import Toko
 from utils.decorators import penjual_only
+
 
 @penjual_only
 def manage_toko(request):
@@ -24,6 +27,7 @@ def info_toko(request, toko_id):
 
     return render(request, 'info_toko.html', context)
 
+
 @penjual_only
 def create_toko(request):
     form = TokoForm(request.POST or None)
@@ -37,6 +41,7 @@ def create_toko(request):
     context = {'form': form}
     return render(request, 'create_toko.html', context)
 
+
 @penjual_only
 def edit_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
@@ -49,17 +54,36 @@ def edit_toko(request, toko_id):
     context = {'form': form}
     return render(request, "edit_toko.html", context)
 
+
 @penjual_only
 def tambah_makanan(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
-    form = MakananForm(request.POST or None)
 
-    if form.is_valid() and request.method == "POST":
-        makanan = form.save(commit=False)
+    if request.method == "POST":
+        form = MakananForm(request.POST, request.FILES)
 
-        makanan.toko = toko
-        makanan.save()
-        return redirect('toko:info_toko', toko_id=toko_id)
+        if form.is_valid():
+            makanan = form.save(commit=False)
+
+            img_file = request.FILES['img_file']
+
+            env = environ.Env()
+
+            key = env.str("UP_PHOTOS_API_KEY")
+            uri = env.str("UP_PHOTOS_API_URI")
+
+            res = requests.request("POST", uri + '?key=' + key,
+                                   files={'source': img_file})
+
+            img_url = res.json()['image']['url']
+
+            makanan.toko = toko
+            makanan.img_url = img_url
+            makanan.save()
+
+            return redirect('toko:info_toko', toko_id=toko_id)
+    else:
+        form = MakananForm()
 
     context = {
         'form': form
