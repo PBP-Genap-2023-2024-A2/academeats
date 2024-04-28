@@ -9,6 +9,7 @@ from utils.decorators import penjual_only, pembeli_only
 
 # Create your views here.
 
+@pembeli_only
 def create_review(request, makanan_id):
     try:
         makanan_dipilih = Makanan.objects.get(pk=makanan_id)
@@ -23,7 +24,9 @@ def create_review(request, makanan_id):
         review = form.save(commit=False)
         review.makanan = makanan_dipilih
         review.save()
-        return redirect(reverse('review:show_review', args=[makanan_id]))
+        if request.user.profile.role == 'penjual':
+            return redirect(reverse('review:show_review_penjual', args=[makanan_id]))
+        return redirect(reverse('review:show_review_pembeli', args=[makanan_id]))
 
     context = {'form': form}
     return render(request, "create_review.html", context)
@@ -62,6 +65,7 @@ def show_review_pembeli(request, makanan_id):
     }
     return render(request, "main.html", context)
 
+@penjual_only
 def reply_review(request, review_id):
     # Get review berdasarkan ID
     review = Review.objects.get(pk = review_id)

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Menu Toko</title>
+{% endblock meta %}
+
+{% block content %}
+
+{% if toko %}
+    <h1 class="text-4xl font-semibold my-3 text-center"><b>Menu Toko</b></h1>
+    <div class="w-full grid grid-cols-5 gap-10 mx-10 my-10">
+        {% for tok in toko %}
+            <a href="{% url 'toko:info_toko' tok.pk %}" class="card h-fit bg-primary text-primary-content hover:scale-[1.05] transition-all">
+                <div class="card-body">
+                    <h3 class="card-title text-4xl"><b>{{ tok.name }}</b></h3>
+                    <h6 class="card-subtitle mt-2 text-muted">{{ tok.description }}</h6>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <h1 class="text-center">Belum ada toko yang tersedia</h1>
+{% endif %}
+
+{% endblock content %}
