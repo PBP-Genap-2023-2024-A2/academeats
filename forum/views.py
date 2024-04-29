@@ -1,4 +1,5 @@
 from django.core.paginator import Paginator
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from forum.models import Forum, Kategori
@@ -41,6 +42,8 @@ def create_new_forum(request):
             forum.kategori.add(Kategori.objects.get(pk=int(k)))
 
         forum.save()
+
+        return HttpResponseRedirect('/forum/')
 
     categories = Kategori.objects.all()
 

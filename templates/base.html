@@ -17,7 +17,7 @@
             <div class="flex gap-5 mx-2">
                 {% if user.is_authenticated %}
                     <div class="dropdown dropdown-end">
-                        {% if user.profile.role != "pembeli" %}
+                        {% if user.profile.role == "pembeli" %}
                             <a tabindex="0" role="button" class="btn btn-ghost btn-circle" href="{% url 'keranjang:show-main' %}">
                                 <div class="indicator">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -55,7 +55,7 @@
                     </div>
                 {% else %}
                     <div>
-                        <a class="btn btn-primary">
+                        <a class="btn btn-primary" href="{% url 'user_profile:login' %}">
                             Daftar Sekarang
                         </a>
                     </div>
