@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from keranjang.models import ItemKeranjang
+from utils.decorators import penjual_only, pembeli_only
 from .models import Order, OrderGroup
 from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
@@ -9,6 +10,8 @@ from toko.models import Toko
 from makanan.models import Makanan
 from django.views.decorators.csrf import csrf_exempt
 
+
+@penjual_only
 def show_main_penjual(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     orders = Order.objects.filter(toko=toko)
@@ -23,6 +26,8 @@ def show_main_penjual(request, toko_id):
 
     return render(request, "penjual.html", context)
 
+
+@pembeli_only
 def show_main_pembeli(request):
     orders = Order.objects.all()
     order_group = OrderGroup.objects.all()
@@ -40,17 +45,19 @@ def show_main_pembeli(request):
 
     return render(request, "pembeli.html", context)
 
-def order_id_generator(og):
-    orderID = og.user.username.upper()[:5] + og.toko.name.upper()[:5]  # ???
-    date_added = og.date_added.split()
-    date = date_added[0][:11]
-    orderID += date.replace("-", "")
-    checksum = 0
-    for i in orderID:
-        checksum += ord(i)
 
-    orderID += (checksum % 10)
-    return orderID
+
+# def order_id_generator(og):
+#     orderID = og.user.username.upper()[:5] + og.toko.name.upper()[:5]  # ???
+#     date_added = og.date_added.split()
+#     date = date_added[0][:11]
+#     orderID += date.replace("-", "")
+#     checksum = 0
+#     for i in orderID:
+#         checksum += ord(i)
+#
+#     orderID += (checksum % 10)
+#     return orderID
 
 @csrf_exempt
 def edit_status_penjual(request):
