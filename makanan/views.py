@@ -16,6 +16,8 @@ from utils.decorators import has_profile_only, penjual_only
 def detail_makanan(request, makanan_id):
     makanan = Makanan.objects.get(pk=makanan_id)
     reviews = Review.objects.filter(makanan=makanan)
+    user = request.user
+    profile = user.profile
     is_penjual = False
 
     try:
@@ -39,7 +41,9 @@ def detail_makanan(request, makanan_id):
         'makanan': makanan,
         'reviews': reviews,
         'rating': rating,
-        'is_penjual': is_penjual
+        'count': count,
+        'is_penjual': is_penjual,
+        'profile': profile,
     }
 
     return render(request, "detail_makanan.html", context)
