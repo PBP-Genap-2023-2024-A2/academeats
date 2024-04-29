@@ -7,7 +7,7 @@ from makanan.forms import MakananForm
 from makanan.models import Makanan
 from toko.forms import TokoForm
 from toko.models import Toko
-from utils.decorators import penjual_only
+from utils.decorators import penjual_only, pembeli_only
 
 
 @penjual_only
@@ -17,11 +17,16 @@ def manage_toko(request, toko_id=-1):
         return render(request, 'manage.html', {'toko': toko})
     return render(request, 'manage_toko.html', {'toko': toko})
 
+
+@pembeli_only
 def show_toko(request):
     toko = Toko.objects.all()
     context = {'toko': toko}
     return render(request, 'show_toko.html', context)
 
+
+
+@pembeli_only
 def info_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     menu = Makanan.objects.filter(toko=toko)
