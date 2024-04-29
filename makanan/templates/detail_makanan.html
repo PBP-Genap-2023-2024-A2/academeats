@@ -16,7 +16,7 @@
                 <h2 class="text-5xl font-semibold">{{ makanan.nama }}</h2>
                 <div class="text-1xl font-thin">
                     <i class="fa-solid fa-star"></i>
-                    <span>({{ rating|floatformat:1 }})</span>
+                    <span>({{ rating|floatformat:1 }}) | {{ count }} ulasan</span>
                 </div>
 
                 <h3 class="text-2xl font-bold mt-5">Rp{{ makanan.harga }}</h3>
@@ -32,14 +32,32 @@
                         Edit Makanan
                     </a>
                 {% else %}
-                    <button class="btn btn-primary max-w-xs mt-5 self-end" value="{{ makanan.pk }}" onclick="addToCart(this)">
-                        Tambahkan ke Keranjang
-                    </button>
+                    {% if profile.role == 'pembeli'%}
+                        {% if makanan.stok > 0 %}
+                            <button class="btn btn-primary max-w-xs mt-5 self-end" value="{{ makanan.pk }}" onclick="addToCart(this)">
+                                Tambahkan ke Keranjang
+                            </button>
+                        {% else %}
+                            <button class="btn btn-secondary max-w-xs mt-5 self-end">
+                                Tambahkan ke Keranjang
+                            </button>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
             </section>
         </div>
         <div class="">
-            <h3 class="text-xl font-bold">Reviews</h3>
+            <h3 class="text-xl font-bold">Reviews
+                {% if profile.role == 'pembeli'%}
+                    <a href="{% url 'review:show_review_pembeli' makanan.pk %}" class="btn btn-primary">
+                        Lihat semua review
+                    </a>
+                {% else %}
+                    <a href="{% url 'review:show_review_penjual' makanan.pk %}" class="btn btn-primary">
+                        Lihat semua review
+                    </a>
+                {% endif %}
+            </h3>
             <div>
                 {% for review in reviews %}
                     <div class="mb-5 mt-5">
