@@ -1,8 +1,8 @@
-django~=5.0.4
+django
 gunicorn
 whitenoise
 psycopg2-binary
-requests~=2.31.0
+requests
 urllib3
 django-environ
 Pillow
