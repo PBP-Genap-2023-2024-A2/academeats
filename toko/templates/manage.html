@@ -42,7 +42,7 @@
                             <h2 class="card-title">{{ t.name }}</h2>
                             <h3>ID: {{ t.pk }}</h3>
                             <div class="card-actions justify-end">
-                                <button class="btn">Atur Toko!</button>
+                                <a class="btn" href="{% url 'toko:manage' t.pk %}">Atur Toko!</a>
                             </div>
                         </div>
                     </div>
