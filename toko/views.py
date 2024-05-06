@@ -79,8 +79,8 @@ def tambah_makanan(request, toko_id):
 
             env = environ.Env()
 
-            key = env.str("UP_PHOTOS_API_KEY")
-            uri = env.str("UP_PHOTOS_API_URI")
+            key = "6d207e02198a847aa98d0a2a901485a5"
+            uri = "https://freeimage.host/api/1/upload"
 
             res = requests.request("POST", uri + '?key=' + key,
                                    files={'source': img_file})
@@ -100,3 +100,4 @@ def tambah_makanan(request, toko_id):
     }
 
     return render(request, 'tambah_makanan.html', context)
+

@@ -96,7 +96,6 @@ def buat_pesan(request, forum_id, reply_to=None):
 
     return render(request, 'buat_pesan.html', {})
 
-@has_profile_only
 def forum_page(request, forum_id):
     forum = Forum.objects.get(pk=forum_id)
     categories = Kategori.objects.all()
