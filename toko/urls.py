@@ -3,6 +3,7 @@ from toko import views
 
 
 urlpatterns = [
+    path('', views.show_toko, name='show_toko'),
     path('<int:toko_id>', views.info_toko, name='info_toko'),
     path('manage', views.manage_toko, name='manage'),
     path('manage/<int:toko_id>', views.manage_toko, name='manage'),

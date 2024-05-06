@@ -9,7 +9,10 @@ from makanan.models import Makanan
 from order.models import OrderGroup, Order
 from django.contrib.auth.decorators import login_required
 
-@login_required
+from utils.decorators import has_profile_only
+
+
+@has_profile_only
 def show_main(request):
     cart = ItemKeranjang.objects.all()
 
@@ -22,6 +25,7 @@ def show_main(request):
     return render(request, "home.html", context)
 
 
+@csrf_exempt
 def get_item(request):
     items = ItemKeranjang.objects.filter(user=request.user)
 
@@ -60,6 +64,7 @@ def delete_item(request, keranjang_id):
     return HttpResponse(b"DELETED", status=200)
 
 
+@csrf_exempt
 def cek_stok(request, keranjang_id):
     keranjang = ItemKeranjang.objects.get(pk=keranjang_id)
     stok = keranjang.makanan.stok
@@ -71,6 +76,9 @@ def checkout_cart(request):
     if request.method == 'POST':
         ids = json.loads(request.POST.get('obj'))
         total_harga = request.POST.get('total')
+
+        if total_harga == 0:
+            return HttpResponse(status=400)
 
         order_group = OrderGroup(user=request.user, total_harga=total_harga)
         order_group.save()
@@ -106,3 +114,9 @@ def update_jumlah(request, keranjang_id):
         return JsonResponse({'jumlah': keranjang.jumlah})
 
     return HttpResponseNotFound()
+
+
+@csrf_exempt
+def cek_jumlah_item(request):
+    item_keranjang = ItemKeranjang.objects.filter(user=request.user)
+    return HttpResponse(len(item_keranjang))

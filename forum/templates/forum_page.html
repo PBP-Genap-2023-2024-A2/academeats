@@ -5,10 +5,10 @@
 {% endblock meta %}
 
 {% block content %}
-    <div class="drawer lg:drawer-open">
+    <div class="drawer lg:drawer-open -mt-20">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
         <div class="drawer-content flex flex-row pt-24 px-14 pb-10">
-            <main class="w-full">
+            <main class="w-full flex flex-col">
                 <div class="card w-full bg-primary/10 text-secondary-content">
                     <div class="card-body">
                         <h2 class="card-title text-2xl">{{ forum.judul }}</h2>
@@ -22,28 +22,28 @@
                             <button class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
                                 <i class="fa-regular fa-heart"></i>
                             </button>
-                            <span class="text-sm mr-3 -ml-1 font-semibold">10</span>
-                            <button class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
+                            <span class="text-sm mr-3 -ml-1 font-semibold"></span>
+                            <a href="{% url 'forum:buat-pesan' forum.pk 0 %}" class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
                                 <i class="fa-regular fa-comment"></i>
-                            </button>
-                            <span class="text-sm mr-3 -ml-1 font-semibold">10</span>
+                            </a>
+                            <span class="text-sm mr-3 -ml-1 font-semibold">{{ forum.jumlah_pesan }}</span>
                             <button class="btn btn-sm btn-square text-lg shadow-none border-none bg-clip-text">
                                 <i class="fa-regular fa-share-from-square"></i>
                             </button>
                         </div>
                     </div>
-                    <comment-box level="0"></comment-box>
+                </div>
+                <div id="msg-box-container" class="mt-5 flex flex-col gap-4 text-primary-content">
 
                 </div>
             </main>
-            <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">Open drawer</label>
 
         </div>
         <div class="drawer-side">
             <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
             <ul class="px-6 pt-24 min-w-md min-h-full text-base-content">
                 <li class="w-full">
-                    <a href="{% url 'forum:create-forum' %}"
+                    <a href="{% url 'forum:create' %}"
                        class="btn btn-primary w-full btn-md my-4 rounded-full gap-2 items-center">
                         <i class="fa-regular fa-plus"></i>
                         <span>Buat Forum</span>
@@ -54,7 +54,7 @@
                     <!-- Sidebar content here -->
                     {% for category in categories %}
                         <li class="flex flex-col">
-                            <a>
+                            <a href="{% url 'forum:home' %}?kategori={{ category.nama }}">
                                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
                                 <span class="self-start text-secondary-content">{{ category.nama }}</span>
                             </a>
@@ -68,6 +68,62 @@
     </div>
 
     <script>
-        import { CommentBox } from "./commentBox.js";
+        const replies = {}
+        const msgBoxContainer = document.getElementById("msg-box-container")
+
+        async function getAllReplies() {
+            const res = await fetch('{% url "forum:get-replies" forum.pk %}')
+            const data = await res.json()
+
+            console.log(data)
+
+            data.forEach(msg => {
+                if (msg.membalas_ke === undefined) {
+                    replies[msg.pk] = {
+                        body: msg.fields.pesan,
+                        reps: []
+                    }
+                } else {
+                    const reply = {
+                        body: msg.fields.pesan
+                    }
+                    replies[msg.membalas_ke]['reps'].push(reply)
+                }
+            })
+
+            console.log(replies)
+        }
+
+        function renderReplies() {
+
+
+            for (let reply in replies) {
+                let msgBox = document.createElement("div")
+                msgBox.classList.add("card")
+                let msgBody = document.createElement("div")
+                msgBody.classList.add("card-body", "bg-primary", "rounded-xl")
+
+                console.log(reply)
+
+                msgBody.innerHTML = `
+                    <h1 class="card-title"></h1>
+                    <p>${replies[reply].body}</p>
+                `
+
+                msgBox.appendChild(msgBody)
+
+                msgBoxContainer.appendChild(msgBox)
+            }
+        }
+
+        (async () => {
+            await getAllReplies();
+            renderReplies()
+        })()
+
+        async function createReply() {
+
+        }
+
     </script>
 {% endblock content %}

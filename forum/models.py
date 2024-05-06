@@ -22,6 +22,6 @@ class Message(models.Model):
     pengirim = models.ForeignKey(User, on_delete=models.CASCADE)
     forum = models.ForeignKey(Forum, on_delete=models.CASCADE)
     pesan = models.TextField()
-    membalas_ke = models.ForeignKey('self', on_delete=models.CASCADE)
+    membalas_ke = models.ForeignKey('self', null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

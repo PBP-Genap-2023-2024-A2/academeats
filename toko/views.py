@@ -1,21 +1,32 @@
-from django.core import serializers
-from django.http import HttpResponse
+import environ
+import requests
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.urls import reverse
 
 from makanan.forms import MakananForm
-from makanan.models import Makanan, Kategori
+from makanan.models import Makanan
 from toko.forms import TokoForm
 from toko.models import Toko
-from user_profile.models import Profile
+from utils.decorators import penjual_only, pembeli_only
 
 
-def manage_toko(request):
+@penjual_only
+def manage_toko(request, toko_id=-1):
     toko = Toko.objects.filter(user=request.user)
+    if(toko_id == -1):
+        return render(request, 'manage.html', {'toko': toko})
+    return render(request, 'manage_toko.html', {'toko': toko})
 
-    return render(request, 'manage.html', {'toko': toko})
+
+@pembeli_only
+def show_toko(request):
+    toko = Toko.objects.all()
+    context = {'toko': toko}
+    return render(request, 'show_toko.html', context)
 
 
+
+@pembeli_only
 def info_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     menu = Makanan.objects.filter(toko=toko)
@@ -27,6 +38,7 @@ def info_toko(request, toko_id):
     return render(request, 'info_toko.html', context)
 
 
+@penjual_only
 def create_toko(request):
     form = TokoForm(request.POST or None)
 
@@ -40,6 +52,7 @@ def create_toko(request):
     return render(request, 'create_toko.html', context)
 
 
+@penjual_only
 def edit_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     form = TokoForm(request.POST or None, instance=toko)
@@ -52,20 +65,39 @@ def edit_toko(request, toko_id):
     return render(request, "edit_toko.html", context)
 
 
+@penjual_only
 def tambah_makanan(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
-    form = MakananForm(request.POST or None)
 
-    if form.is_valid() and request.method == "POST":
-        makanan = form.save(commit=False)
+    if request.method == "POST":
+        form = MakananForm(request.POST, request.FILES)
 
-        makanan.toko = toko
-        makanan.kategori = Kategori.objects.get(pk=int(form.cleaned_data.get("kategori")))
-        makanan.save()
-        return redirect('toko:info_toko', toko_id=toko_id)
+        if form.is_valid():
+            makanan = form.save(commit=False)
+
+            img_file = request.FILES['img_file']
+
+            env = environ.Env()
+
+            key = "6d207e02198a847aa98d0a2a901485a5"
+            uri = "https://freeimage.host/api/1/upload"
+
+            res = requests.request("POST", uri + '?key=' + key,
+                                   files={'source': img_file})
+
+            img_url = res.json()['image']['url']
+
+            makanan.toko = toko
+            makanan.img_url = img_url
+            makanan.save()
+
+            return redirect('toko:info_toko', toko_id=toko_id)
+    else:
+        form = MakananForm()
 
     context = {
         'form': form
     }
 
     return render(request, 'tambah_makanan.html', context)
+
