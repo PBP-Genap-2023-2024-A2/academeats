@@ -74,8 +74,16 @@ Pembeli dapat membuka forum dan berdiskusi dalam forum dengan pembeli atau penju
 
 
 ### Sumber Dataset Makanan dan Minuman
-https://www.kaggle.com/datasets/ariqsyahalam/indonesia-food-delivery-gofood-product-list
+https://www.themealdb.com/api.php
 
 ### Role atau Peran Pengguna Beserta Deskripsinya
 
 Terdapat dua role, pembeli dan penjual. Detail tiap role telah dijelaskan di bagian daftar modul.
+
+### Alur Pengintegrasian dengan Web Service PTS
+
+Untuk mengintegrasikan mobile app dengan web app yang telah kami buat pada proyek PTS sebelumnya, kami telah menyusun langkah-langkah sebagai berikut:
+1. Mengimplementasikan RESTful API pada setiap fitur yang tersedia di web app;
+2. Melakukan unit testing untuk memsatikan setiap fitur yang tersedia pada web dapat diakses menggunakan endpoint API yang telah kami buat pada poin satu (1) menggunakan Postman;
+3. Menyusun interface untuk setiap fitur pada mobile app dengan meng-consume data dari web app melalui endpoint API yang telah dibuat; dan
+4. Melakukan full testing dengan sistem cross-check untuk memastikan bahwa data yang diconsume oleh web app dan mobile app berasal dari sumber yang sama.
