@@ -10,7 +10,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from serializers.user_profile_serializers import UserSerializer
-from user_profile.forms import ProfileForm, SignUpForm, DaftarForm
+from user_profile.forms import DaftarForm
+from user_profile.models import UserProfile
 
 
 # Fungsi untuk melakukan register user
@@ -18,7 +19,7 @@ from user_profile.forms import ProfileForm, SignUpForm, DaftarForm
 def register(request):
 
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = DaftarForm(request.POST)
 
         if form.is_valid():
             user = form.save(commit=False)
@@ -35,20 +36,21 @@ def register(request):
 
 @login_required(login_url='login')
 def create_profile(request):
+    pass
 
-    if request.method == "POST":
-        form = ProfileForm(request.POST, instance=request.user.profile)
-
-        if form.is_valid():
-            profile = form.save(commit=False)
-            request.user.profile = profile
-            request.user.save()
-
-            return HttpResponseRedirect(reverse('user_profile:login'))
-
-        messages.error(request, form.errors)
-
-    return render(request, 'create_profile.html')
+    # if request.method == "POST":
+    #     form = ProfileForm(request.POST, instance=request.user.profile)
+    #
+    #     if form.is_valid():
+    #         profile = form.save(commit=False)
+    #         request.user.profile = profile
+    #         request.user.save()
+    #
+    #         return HttpResponseRedirect(reverse('user_profile:login'))
+    #
+    #     messages.error(request, form.errors)
+    #
+    # return render(request, 'create_profile.html')
 
 
 # Fungsi untuk melakukan login user
@@ -131,12 +133,13 @@ def top_up(request, username):
 
 
 # WARNING!! FOR DEVELOPMENT PURPOSE ONLY!
+@csrf_exempt
 def delete_acc(request, username):
     try:
-        u = User.objects.get(username=username)
+        u = UserProfile.objects.get(username=username)
         u.delete()
 
-    except User.DoesNotExist:
+    except UserProfile.DoesNotExist:
         pass
 
     return redirect('user-profile:register')
@@ -156,11 +159,15 @@ def flutter_daftar(request):
             user = form.save(commit=False)
             user.save()
 
-            return JsonResponse(UserSerializer(user).data)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
 
-        return JsonResponse(form.errors)
+            return JsonResponse(UserSerializer(user).data, status=200)
+
+        errors = {field: error.get_json_data() for field, error in form.errors.items()}
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
 
     return HttpResponseNotFound()
+
 
 @csrf_exempt
 def flutter_masuk(request):
@@ -170,4 +177,44 @@ def flutter_masuk(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return JsonResponse({'success': True}, status=200)
+
+            return JsonResponse({'success': False, 'message': 'Akun telah dinonaktifkan'}, status=401)
+
+        return JsonResponse({'success': False, 'message': 'Username atau kata sandi salah.'}, status=401)
+
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
+def flutter_logout(request):
+
+    if request.method == "POST":
+        try:
+            logout(request)
+            return JsonResponse({'success': True, 'message': 'Sukses logout'}, status=200)
+        except:
+            return JsonResponse({'success': False}, status=401)
+
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
+def flutter_user_info(request):
+
+    if request.method == "GET":
+        username = request.GET.get('username')
+
+        try:
+            user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Pengguna tidak ditemukan!'}, status=401)
+
+        return JsonResponse({'success': True, 'user': UserSerializer(user).data}, status=200)
+
+    return HttpResponseNotFound()
