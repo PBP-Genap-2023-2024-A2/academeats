@@ -3,11 +3,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from user_profile.forms import ProfileForm, SignUpForm
+
+from serializers.user_profile_serializers import UserSerializer
+from user_profile.forms import ProfileForm, SignUpForm, DaftarForm
 
 
 # Fungsi untuk melakukan register user
@@ -143,4 +146,28 @@ def delete_acc(request, username):
 
 # * FLUTTER AUTHENTICATION SYSTEM * #
 
+@csrf_exempt
 def flutter_daftar(request):
+
+    if request.method == "POST":
+        form = DaftarForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+
+            return JsonResponse(UserSerializer(user).data)
+
+        return JsonResponse(form.errors)
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def flutter_masuk(request):
+
+    if request.method == "POST":
+
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        authenticate(request, username=username, password=password)
