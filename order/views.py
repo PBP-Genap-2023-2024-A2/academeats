@@ -2,7 +2,6 @@ from django.shortcuts import render
 from keranjang.models import ItemKeranjang
 from utils.decorators import penjual_only, pembeli_only
 from .models import Order, OrderGroup
-from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse

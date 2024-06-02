@@ -7,7 +7,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from user_profile.models import Profile
 from user_profile.forms import ProfileForm, SignUpForm
 
 
@@ -83,47 +82,50 @@ def logout_user(request):
 def profile_page(request, username):
 
     user = User.objects.get(username=username)
-    profile = Profile.objects.get(user=user)
-
-    return render(request, 'profile.html', context={'profile': profile})
+    # profile = Profile.objects.get(user=user)
+    #
+    # return render(request, 'profile.html', context={'profile': profile})
 
 
 def edit_profile(request, username):
-    user = User.objects.get(username=username)
-    profile = Profile.objects.get(user=user)
-
-    if request.method == "POST":
-        form = ProfileForm(request.POST, instance=profile)
-
-        if form.is_valid():
-            profile = form.save(commit=False)
-            profile.save()
-
-            return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
-        
-        return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
-        
-    
-
-    return render(request, 'edit_profile.html', context={'profile': profile, 'user': user})
+    pass
+    # user = User.objects.get(username=username)
+    # # profile = Profile.objects.get(user=user)
+    #
+    # if request.method == "POST":
+    #     form = ProfileForm(request.POST, instance=profile)
+    #
+    #     if form.is_valid():
+    #         profile = form.save(commit=False)
+    #         profile.save()
+    #
+    #         return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
+    #
+    #     return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
+    #
+    #
+    #
+    # return render(request, 'edit_profile.html', context={'profile': profile, 'user': user})
 
 def show_json_saldo(request):
     data_saldo = request.user.profile.saldo
     return JsonResponse({'saldo': data_saldo})
 
 def top_up(request, username):
-    user = User.objects.get(username=username)
-    profile = Profile.objects.get(user=user)
+    pass
+    # user = User.objects.get(username=username)
+    # profile = Profile.objects.get(user=user)
+    #
+    # if request.method == 'POST':
+    #     jumlah = request.POST.get('jumlah')
+    #     jumlah = jumlah.replace('.', '')
+    #     profile.saldo += (int(jumlah) - 1000)
+    #     profile.save()
+    #
+    #     return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
+    #
+    # return render(request, 'top_up.html', context={'profile': profile, 'user': user})
 
-    if request.method == 'POST':
-        jumlah = request.POST.get('jumlah')
-        jumlah = jumlah.replace('.', '') 
-        profile.saldo += (int(jumlah) - 1000)
-        profile.save()
-
-        return HttpResponseRedirect(reverse('user-profile:profile', args=[username]))
-
-    return render(request, 'top_up.html', context={'profile': profile, 'user': user})
 
 # WARNING!! FOR DEVELOPMENT PURPOSE ONLY!
 def delete_acc(request, username):
@@ -135,3 +137,10 @@ def delete_acc(request, username):
         pass
 
     return redirect('user-profile:register')
+
+
+# * FOR FLUTTER ONLY!! * #
+
+# * FLUTTER AUTHENTICATION SYSTEM * #
+
+def flutter_daftar(request):

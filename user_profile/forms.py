@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from user_profile.models import Profile
+# from user_profile.models import Profile
 
 
 class SignUpForm(UserCreationForm):
@@ -30,4 +30,4 @@ class SignUpForm(UserCreationForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         fields = ("nama_lengkap", "nama_panggilan", "bio", "role")
-        model = Profile
+        # model = Profile
