@@ -34,3 +34,6 @@ class UserProfileBackend(ModelBackend):
         if user is not None and user.check_password(password) and self.user_can_authenticate(user):
             return user
         return None
+
+    def login(self, request, user):
+        super.login(request, user)
