@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from review.forms import ReviewForm, ReplyForm
-from review.models import Review, Order, Makanan, User
+from review.models import Review
+from makanan.models import Makanan
 from toko.models import Toko
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from utils.decorators import penjual_only, pembeli_only
