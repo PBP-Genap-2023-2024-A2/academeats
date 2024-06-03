@@ -204,6 +204,8 @@ def flutter_logout(request):
     return HttpResponseNotFound()
 
 
+# * FLUTTER DEV API * #
+
 @csrf_exempt
 def flutter_user_info(request):
 

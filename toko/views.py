@@ -1,10 +1,13 @@
 import environ
 import requests
+from django.http import JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from makanan.forms import MakananForm
 from makanan.models import Makanan
+from serializers.toko_serializers import TokoSerializer
 from toko.forms import TokoForm
 from toko.models import Toko
 from utils.decorators import penjual_only, pembeli_only
@@ -101,3 +104,29 @@ def tambah_makanan(request, toko_id):
 
     return render(request, 'tambah_makanan.html', context)
 
+
+# * FOR FLUTTER ONLY!! * #
+
+# * FLUTTER DEV API * #
+
+@csrf_exempt
+def flutter_get_all_toko(request):
+    print(request.method)
+
+    if request.method == "GET":
+        toko = Toko.objects.first()
+
+        return JsonResponse(TokoSerializer(toko).data, status=200, safe=False)
+
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
+def flutter_get_toko_by_id(request, id):
+
+    if request.method == "GET":
+        toko = Toko.objects.get(pk=id)
+
+        return JsonResponse(TokoSerializer(toko).data, status=200)
+
+    return HttpResponseNotFound()
