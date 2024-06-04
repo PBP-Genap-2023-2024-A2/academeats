@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from keranjang.models import ItemKeranjang
+from serializers.order_serializers import OrderGroupSerializer, OrderSerializer
 from utils.decorators import penjual_only, pembeli_only
 from .models import Order, OrderGroup
-from user_profile.models import Profile
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
@@ -148,3 +148,17 @@ def aggregat_status(orders):
     else:
         status = "SELESAI"
     return status
+
+
+# * FOR FLUTTER ONLY!! * #
+
+# * FLUTTER DEV API * #
+
+def flutter_get_og_by_id(request, id):
+    if request.method == "GET":
+        og = OrderGroup.objects.get(pk=id)
+
+        orders = Order.objects.filter(order_group=og)
+
+        return JsonResponse(OrderSerializer(orders, many=True).data, status=200, safe=False)
+    return HttpResponse()
