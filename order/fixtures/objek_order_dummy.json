@@ -17,7 +17,7 @@
     "toko": 1,
     "user": 1,
     "quantity": 10,
-    "status": "SELESAI"
+    "status": "DIPESAN"
   }
 },
 {
@@ -29,7 +29,7 @@
     "toko": 1,
     "user": 1,
     "quantity": 10,
-    "status": "SELESAI"
+    "status": "DIPESAN"
   }
 }
 ]

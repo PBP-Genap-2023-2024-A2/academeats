@@ -25,7 +25,25 @@ def show_main_penjual(request, toko_id):
     }
 
     return render(request, "penjual.html", context)
+    
+def show_main_penjual_json(request, toko_id):
+    toko = Toko.objects.get(pk=toko_id)
+    orders = Order.objects.filter(toko=toko)
 
+    pesanan_cnt = 0
+    for order in orders:
+        pesanan_cnt += 1
+
+    orders_list = []
+    for order in orders:
+        orders_list.append({'food_name': order.makanan.nama, 'quantity': order.quantity, 'status': order.status, 'id': order.pk})
+
+    # nanti yang direturn (order_list) jadinya gini: [{order}, {order}, ...]
+    context = {
+        'orders': orders_list,
+    }
+
+    return JsonResponse(context)
 
 @pembeli_only
 def show_main_pembeli(request):
@@ -45,7 +63,31 @@ def show_main_pembeli(request):
 
     return render(request, "pembeli.html", context)
 
+def show_main_pembeli_json(request):
+    orders = Order.objects.all()
+    order_group = OrderGroup.objects.all()
 
+    # yang direturn jadi gini: [{'pk': og.pk, 'total_harga': og.total_harga, 'status': aggregat_status(o), orders: [{order}, {order}, {order}, ...]}, ...]
+    order_groups = []
+    for og in order_group:
+        og_dict = {}
+        orders = orders.filter(order_group = og)
+        og_dict['pk'] = og.pk
+        og_dict['total_harga'] = og.total_harga
+        og_dict['status'] = aggregat_status(orders)
+
+        orders_list = []
+        for o in orders:
+            orders_list.append({'food_name': o.makanan.nama, 'quantity': o.quantity, 'status': o.status, 'id': o.pk})
+        og_dict['orders'] = orders_list
+        order_groups.append(og_dict)
+
+        context = {
+            'order_groups': order_groups,
+        }
+        print(context)
+
+    return JsonResponse(context)
 
 # def order_id_generator(og):
 #     orderID = og.user.username.upper()[:5] + og.toko.name.upper()[:5]  # ???
