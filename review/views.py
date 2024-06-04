@@ -2,7 +2,8 @@ import json
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from review.forms import ReviewForm, ReplyForm
-from review.models import Review, Order, Makanan, User
+from review.models import Review
+from makanan.models import Makanan
 from toko.models import Toko
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
 from django.forms.models import model_to_dict
