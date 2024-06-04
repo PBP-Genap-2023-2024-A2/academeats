@@ -74,7 +74,7 @@ Pembeli dapat membuka forum dan berdiskusi dalam forum dengan pembeli atau penju
 
 
 ### Sumber Dataset Makanan dan Minuman
-https://www.kaggle.com/datasets/ariqsyahalam/indonesia-food-delivery-gofood-product-list
+https://www.themealdb.com/api.php
 
 ### Role atau Peran Pengguna Beserta Deskripsinya
 

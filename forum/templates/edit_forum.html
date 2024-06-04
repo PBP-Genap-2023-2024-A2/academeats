@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Edit Forum</title>
+{% endblock meta %}
+
+{% block content %}
+    <main class="w-full h-full flex justify-center pt-20">
+        <form method="POST" class="min-w-[50%] xl:max-w-[50%] w-98 pt-6 flex flex-col gap-3">
+        {% csrf_token %}
+            <h1 class="text-2xl font-bold">Edit forum</h1>
+            <div class="flex flex-col mt-3 gap-1">
+                <label for="judul" class="font-semibold text-lg">Judul</label>
+                <input id="judul" name="judul" type="text" placeholder="Judul forum..."
+                       value="{{ forum.judul }}" class="input input-bordered w-full"/>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="deskripsi" class="label-text font-semibold text-lg">Deskripsi</label>
+                <textarea id="deskripsi" name="deskripsi" class="textarea textarea-bordered h-24"
+                          placeholder="Deskripsi...">{{ forum.deskripsi }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-5">Ubah!</button>
+        </form>
+    </main>
+{% endblock content %}
