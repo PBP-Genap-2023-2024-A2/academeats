@@ -85,19 +85,20 @@ def show_review_pembeli(request, makanan_id):
     }
     return render(request, "main.html", context)
 
-def show_review_JSON(request, makanan_id):
-    try:
-        makanan_dipilih = Makanan.objects.get(pk=makanan_id)
-    except Makanan.DoesNotExist:
-        return render(request, "error.html", {"message": "Toko does not exist."})
-    reviews = Review.objects.filter(makanan=makanan_dipilih)
-    reviews_list = list(reviews.values())
-    makanan_dict = model_to_dict(makanan_dipilih)
-    context = {
-        'reviews': reviews_list,
-        'makanan': makanan_dict
-    }
-    return JsonResponse(context)
+def show_review_flutter(request):
+    review = Review.objects.all()
+    data = []
+    for p in review:
+        each_data = {
+            "user" : p.user,
+            "nilai" : p.nilai,
+            "komentar" : p.komentar,
+            "reply" : p.reply,
+            "namaMakanan": p.makanan.nama,
+        }
+        data.append(each_data)
+
+    return HttpResponse(json.dumps(data), content_type="application/json")
 
 @penjual_only
 def reply_review(request, review_id):
