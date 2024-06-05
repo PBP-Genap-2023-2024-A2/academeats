@@ -15,7 +15,7 @@ class Forum(models.Model):
     judul = models.CharField(max_length=50)
     deskripsi = models.TextField()
     kreator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
-    kategori = models.ManyToManyField(Kategori)
+    kategori = models.ForeignKey(Kategori, on_delete=models.CASCADE, null=True)
     jumlah_pesan = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 

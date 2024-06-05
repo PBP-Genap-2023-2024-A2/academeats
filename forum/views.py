@@ -9,7 +9,6 @@ from forum.models import Forum, Kategori, Message
 from utils.decorators import has_profile_only
 
 
-@has_profile_only
 def forum_home(request):
 
     if request.GET.get("q"):
@@ -22,7 +21,6 @@ def forum_home(request):
 
     categories = Kategori.objects.all()
     paginator = Paginator(forums, 10)
-    forum_dibuat = Forum.objects.filter(kreator=request.user).order_by('pk')[:5]
 
     page_number = request.GET.get("page") or 1
     page_obj = paginator.get_page(page_number)
@@ -30,10 +28,9 @@ def forum_home(request):
     context = {
         'page_obj': page_obj,
         'categories': categories,
-        'forum_dibuat': forum_dibuat
     }
 
-    return render(request,  'forum_home.html', context)
+    return render(request,  'forum-home.html', context)
 
 
 @has_profile_only
