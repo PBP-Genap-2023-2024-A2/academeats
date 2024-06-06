@@ -1,46 +1,89 @@
-from django.db import models
-from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import User, AbstractUser
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
+
+# class Profile(models.Model):
+#     pass
 
 
-# Create your models here.
-class Profile(models.Model):
-    # ENUM FOR ROLE
-    # Digunakan untuk user agar hanya dapat memilih antara role penjual atau pembeli
-    class Role(models.TextChoices):
-        PENJUAL = "penjual", "Penjual"
-        PEMBELI = "pembeli", "Pembeli"
+class UserProfileManager(BaseUserManager):
+    def create_user(self, email, username, nomor_hp, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email harus diisi!')
+        if not username:
+            raise ValueError('Username harus diisi!')
+        if not nomor_hp:
+            raise ValueError('Nomor telepon harus diisi!')
 
-    # One-to-one relationship with user model
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        primary_key=True
+        email = self.normalize_email(email)
+        user = self.model(email=email, username=username, nomor_hp=nomor_hp, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, username, nomor_hp, password=None, **extra_fields):
+
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if (extra_fields.get('is_staff') is not True) \
+                or (extra_fields.get('is_superuser') is not True):
+            raise ValueError('Superuser harus memiliki is_staff dan is_superuser yang bernilai True!')
+
+        return self.create_user(email, username, nomor_hp, password, **extra_fields)
+
+
+class UserProfile(AbstractUser):
+    ROLE_CHOICES = (
+        ('admin', 'Admin'),
+        ('penjual', 'Penjual'),
+        ('pembeli', 'Pembeli')
     )
 
-    # Additional fields for user
+    # Untuk autentikasi
+    email = models.EmailField(unique=True)
+    nomor_hp = models.CharField(max_length=14, unique=True)
+    username = models.CharField(max_length=150, unique=True)
+
     nama_lengkap = models.CharField(max_length=255)
     nama_panggilan = models.CharField(max_length=255)
     bio = models.TextField()
     saldo = models.FloatField(default=0)
-    role = models.CharField(
-        max_length=7,
-        choices=Role.choices
-    )
+    role = models.CharField(max_length=7, choices=ROLE_CHOICES)
     pfp_url = models.TextField(
         default="https://i.quotev.com/hiaa3fa55smq.jpg"
     )
 
+    objects = UserProfileManager()
 
-# this method to generate profile when user is created
-@receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
+    REQUIRED_FIELDS = ['email', 'nomor_hp']
 
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='user_profile_set',
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups',
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='user_profile_set',
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions',
+    )
 
-# this method to update profile when user is updated
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
-    instance.profile.save()
+    def __str__(self):
+        return self.username
+
+    def deduct_balance(self, amt):
+        if amt <= 0:
+            raise ValidationError("Harus positif!")
+
+        if self.saldo < amt:
+            raise ValidationError("Saldo tidak cukup!")
+
+        with transaction.atomic():
+            self.saldo -= amt
+            self.save(update_fields=['balance'])

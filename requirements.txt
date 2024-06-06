@@ -6,3 +6,5 @@ requests~=2.31.0
 urllib3
 django-environ
 Pillow
+djangorestframework
+django-cors-headers
