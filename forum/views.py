@@ -33,7 +33,6 @@ def forum_home(request):
     return render(request,  'forum-home.html', context)
 
 
-@has_profile_only
 def create_new_forum(request):
 
     if request.method == 'POST':

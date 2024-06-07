@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="container">
-            <input class="form-control-sm w-100 bg-white text-dark" type="search"
+            <input class="form-control-lg w-100 bg-white text-dark" type="search"
                    style="margin-top: 16px;margin-bottom: 16px;border-style: none;border-color: var(--bs-primary-text-emphasis);"
                    placeholder="Cari Forum">
         </div>
@@ -42,8 +42,8 @@
                             <h4 class="card-title">{{ forum.judul }}</h4>
                             <h6 class="text-muted card-subtitle mb-2">Dimulai oleh: {{ forum.kreator.nama_lengkap }}</h6><span
                                     class="badge bg-primary"
-                                    style="color: var(--bs-primary-text-emphasis);">Kategori</span>
-                            <p class="card-text">Deskripsi Forum</p>
+                                    style="color: var(--bs-primary-text-emphasis);">{{ forum.kategori.nama }}</span>
+                            <p class="card-text">{{ forum.deskripsi }}</p>
                             <button class="btn" type="button" style="padding: 4px 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
                                      viewBox="0 0 16 16" class="bi bi-arrow-up" style="width: 20px;height: 20px;">
@@ -64,62 +64,6 @@
                     </div>
                 </li>
                 {% endfor %}
-                <li class="list-group-item">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <h6 class="text-muted card-subtitle mb-2">Subtitle</h6><span class="badge bg-primary"
-                                                                                         style="color: var(--bs-primary-text-emphasis);">Kategori</span>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio,
-                                dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget
-                                metus.</p>
-                            <button class="btn" type="button" style="padding: 4px 10px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-arrow-up" style="width: 20px;height: 20px;">
-                                    <path fill-rule="evenodd"
-                                          d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"></path>
-                                </svg>
-                            </button>
-                            <small style="font-size: 16px;">0</small>
-                            <button class="btn" type="button" style="padding: 4px 10px;margin-left: 15px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-arrow-down" style="width: 20px;height: 20px;">
-                                    <path fill-rule="evenodd"
-                                          d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"></path>
-                                </svg>
-                            </button>
-                            <small style="font-size: 16px;">0</small>
-                        </div>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <h6 class="text-muted card-subtitle mb-2">Subtitle</h6><span class="badge bg-primary"
-                                                                                         style="color: var(--bs-primary-text-emphasis);">Kategori</span>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio,
-                                dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget
-                                metus.</p>
-                            <button class="btn" type="button" style="padding: 4px 10px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-arrow-up" style="width: 20px;height: 20px;">
-                                    <path fill-rule="evenodd"
-                                          d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"></path>
-                                </svg>
-                            </button>
-                            <small style="font-size: 16px;">0</small>
-                            <button class="btn" type="button" style="padding: 4px 10px;margin-left: 15px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
-                                     viewBox="0 0 16 16" class="bi bi-arrow-down" style="width: 20px;height: 20px;">
-                                    <path fill-rule="evenodd"
-                                          d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"></path>
-                                </svg>
-                            </button>
-                            <small style="font-size: 16px;">0</small>
-                        </div>
-                    </div>
-                </li>
             </ul>
         </div>
     </section>

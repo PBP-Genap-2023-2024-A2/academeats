@@ -17,7 +17,7 @@ class Forum(models.Model):
     kreator = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True)
     kategori = models.ForeignKey(Kategori, on_delete=models.CASCADE, null=True)
     jumlah_pesan = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
 
 class Message(models.Model):

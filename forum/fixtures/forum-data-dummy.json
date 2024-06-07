@@ -1,0 +1,13 @@
+[
+  {
+    "model": "forum.Forum",
+    "pk": 1,
+    "fields": {
+      "judul": "How to make",
+      "deskripsi": "lorem ipsum dolor sit amet",
+      "kreator": 1,
+      "kategori": 1,
+      "jumlah_pesan": 100
+    }
+  }
+]
