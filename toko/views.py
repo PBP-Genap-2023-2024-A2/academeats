@@ -114,9 +114,9 @@ def flutter_get_all_toko(request):
     print(request.method)
 
     if request.method == "GET":
-        toko = Toko.objects.first()
+        toko = Toko.objects.all()
 
-        return JsonResponse(TokoSerializer(toko).data, status=200, safe=False)
+        return JsonResponse(TokoSerializer(toko, many=True).data, status=200, safe=False)
 
     return HttpResponseNotFound()
 
