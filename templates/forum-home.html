@@ -1,0 +1,70 @@
+{% extends 'base_.html' %}
+
+{% block body %}
+    <section class="py-5 mt-5">
+        <div class="container">
+            <div class="row row-cols-1 d-flex justify-content-center align-items-center">
+                <div class="col text-center">
+                    <h2 class="display-3 fw-bold mb-4">Forum AcademEats!</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <input class="form-control-lg w-100 bg-white text-dark" type="search"
+                   style="margin-top: 16px;margin-bottom: 16px;border-style: none;border-color: var(--bs-primary-text-emphasis);"
+                   placeholder="Cari Forum">
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle mb-3" type="button"
+                                id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropdown button
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <ul class="list-group">
+                {% for forum in page_obj %}
+                <li class="list-group-item"><span></span>
+                    <div class="card">
+                        <div class="card-body"><span class="badge bg-primary"></span><span
+                                class="badge bg-primary"></span>
+                            <h4 class="card-title">{{ forum.judul }}</h4>
+                            <h6 class="text-muted card-subtitle mb-2">Dimulai oleh: {{ forum.kreator.nama_lengkap }}</h6><span
+                                    class="badge bg-primary"
+                                    style="color: var(--bs-primary-text-emphasis);">{{ forum.kategori.nama }}</span>
+                            <p class="card-text">{{ forum.deskripsi }}</p>
+                            <button class="btn" type="button" style="padding: 4px 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                     viewBox="0 0 16 16" class="bi bi-arrow-up" style="width: 20px;height: 20px;">
+                                    <path fill-rule="evenodd"
+                                          d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"></path>
+                                </svg>
+                            </button>
+                            <small style="font-size: 16px;">0</small>
+                            <button class="btn" type="button" style="padding: 4px 10px;margin-left: 15px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                     viewBox="0 0 16 16" class="bi bi-arrow-down" style="width: 20px;height: 20px;">
+                                    <path fill-rule="evenodd"
+                                          d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1"></path>
+                                </svg>
+                            </button>
+                            <small style="font-size: 16px;">0</small>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endblock %}
