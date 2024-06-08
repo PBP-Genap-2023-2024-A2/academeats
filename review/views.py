@@ -1,6 +1,7 @@
 import json
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from review.forms import ReviewForm, ReplyForm
 from review.models import Review
 from makanan.models import Makanan
@@ -9,6 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from utils.decorators import penjual_only, pembeli_only
+from serializers.review_serializers import ReviewSerializer
 
 
 # Create your views here.
@@ -35,22 +37,7 @@ def create_review(request, makanan_id):
     context = {'form': form}
     return render(request, "create_review.html", context)
 
-def create_review_JSON(request, makanan_id):
-    if request.method == 'POST':
 
-        data = json.loads(request.body)
-
-        new_review = Review.objects.create(
-            user = request.user,
-            makanan = Makanan.objects.get(pk=makanan_id),
-            komentar = data["komentar"],
-            nilai = int(data["nilai"]),
-            reply = data["reply"]
-        )
-        new_review.save()
-        return JsonResponse({"status": "success"}, status=200)
-    else:
-        return JsonResponse({"status": "error"}, status=401)
 
 @penjual_only
 def show_review_penjual(request, makanan_id):
@@ -73,7 +60,6 @@ def show_review_penjual(request, makanan_id):
     }
     return render(request, "main.html", context)
 
-@pembeli_only
 def show_review_pembeli(request, makanan_id):
     try:
        makanan_dipilih = Makanan.objects.get(pk=makanan_id)
@@ -85,21 +71,6 @@ def show_review_pembeli(request, makanan_id):
         'makanan': makanan_dipilih
     }
     return render(request, "main.html", context)
-
-def show_review_flutter(request):
-    review = Review.objects.all()
-    data = []
-    for p in review:
-        each_data = {
-            "user" : p.user,
-            "nilai" : p.nilai,
-            "komentar" : p.komentar,
-            "reply" : p.reply,
-            "namaMakanan": p.makanan.nama,
-        }
-        data.append(each_data)
-
-    return HttpResponse(json.dumps(data), content_type="application/json")
 
 @penjual_only
 def reply_review(request, review_id):
@@ -140,3 +111,46 @@ def reply_review_JSON(request, review_id):
                 'form': form
                 }
     return JsonResponse(context)
+
+#For flutter purposes
+@csrf_exempt
+def show_review_flutter(request):
+    if request.method == 'GET':
+        review = Review.objects.all()
+
+        return JsonResponse(ReviewSerializer(review, many=True).data, status=200, safe=False)
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def create_review_flutter(request, makanan_id):
+    if request.method == 'POST':
+
+        data = json.loads(request.body)
+
+        user_profile = None
+        if request.user.is_authenticated:
+            user_profile = request.user.profile
+
+        new_review = Review.objects.create(
+            user = user_profile,
+            makanan = Makanan.objects.get(pk=makanan_id),
+            komentar = data["komentar"],
+            nilai = int(data["nilai"]),
+            reply = None
+        )
+        new_review.save()
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
+    
+@csrf_exempt
+def reply_review_flutter(request, review_id):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        review = Review.objects.get(pk=review_id)
+        review.reply = data["reply"]
+        review.save()
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)

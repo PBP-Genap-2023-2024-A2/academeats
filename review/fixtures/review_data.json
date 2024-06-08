@@ -1,0 +1,26 @@
+[
+  {
+    "model": "review.Review",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "order": 1,
+      "makanan": 1,
+      "nilai": 5,
+      "komentar": "Makanan enak banget",
+      "reply": "Terima kasih sudah mampir"
+    }
+  },
+  {
+    "model": "review.Review",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "order": 2,
+      "makanan": 2,
+      "nilai": 4,
+      "komentar": "Cukup enak, tapi bisa lebih baik",
+      "reply": null
+    }
+  }
+]
