@@ -11,5 +11,8 @@ urlpatterns = [
     path('checkout-cart/', views.checkout_cart, name='checkout-cart'),
     path('cek-stok/<int:keranjang_id>', views.cek_stok, name='cek-stok'),
     path('update-jumlah/<int:keranjang_id>/', views.update_jumlah, name='update-jumlah'),
-    path('cek-jumlah-item/', views.cek_jumlah_item, name='cek-jumlah-item')
+    path('cek-jumlah-item/', views.cek_jumlah_item, name='cek-jumlah-item'),
+
+    # * FLUTTER API * #
+    path('api/v1/get-keranjang-item/<str:username>/', views.get_users_cart_items, name='get-keranjang-item'),
 ]

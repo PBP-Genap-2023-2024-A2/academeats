@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -174,15 +176,15 @@ def flutter_masuk(request):
 
     if request.method == "POST":
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST['username']
+        password = request.POST['password']
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return JsonResponse({'success': True}, status=200)
+                return JsonResponse(UserSerializer(user).data, status=200)
 
             return JsonResponse({'success': False, 'message': 'Akun telah dinonaktifkan'}, status=401)
 
