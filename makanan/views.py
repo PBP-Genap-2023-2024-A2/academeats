@@ -1,7 +1,7 @@
 import json
 
 from django.core import serializers
-from django.http import HttpResponseNotFound, JsonResponse, HttpResponse
+from django.http import HttpResponseNotFound, JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
@@ -175,3 +175,17 @@ def flutter_get_makanan_by_id(request, id):
         return JsonResponse(MakananSerializer(makanan).data, status=200)
 
     return HttpResponseNotFound()
+@csrf_exempt
+def flutter_get_makanan_by_toko_id(request, toko_id):
+    if request.method == "GET":
+        try:
+            toko = Toko.objects.get(pk=toko_id)
+        except Toko.DoesNotExist:
+            return HttpResponseBadRequest()
+        makanan = Makanan.objects.filter(toko=toko)
+
+        return JsonResponse(MakananSerializer(makanan, many=True).data, status=200, safe=False)
+    return HttpResponseNotFound()
+
+
+

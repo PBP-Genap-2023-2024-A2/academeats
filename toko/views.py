@@ -129,3 +129,5 @@ def flutter_get_toko_by_id(request, id):
         return JsonResponse(TokoSerializer(toko).data, status=200)
 
     return HttpResponseNotFound()
+
+

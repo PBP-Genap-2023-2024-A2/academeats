@@ -12,4 +12,6 @@ urlpatterns = [
     # * FLUTTER API * #
     path('api/v1/', views.flutter_get_all_makanan, name='flutter_get_all_makanan'),
     path('api/v1/<int:id>/', views.flutter_get_makanan_by_id, name='flutter_get_makanan_by_id'),
+    path('api/v1/toko/<int:toko_id>/', views.flutter_get_makanan_by_toko_id, name='flutter_get_makanan_by_toko_id')
     ]
+
