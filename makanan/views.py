@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from makanan.models import Makanan
 from review.models import Review
+from serializers.makanan_serializers import MakananSerializer
 from toko.models import Toko
 from makanan.forms import MakananForm
 from django.http import HttpResponseRedirect
@@ -150,3 +151,27 @@ def edit_makanan(request, makanan_id):
     return render(request, "edit_makanan.html", context)
 
 
+# * FOR FLUTTER ONLY!! * #
+
+# * FLUTTER DEV API * #
+
+@csrf_exempt
+def flutter_get_all_makanan(request):
+
+    if request.method == "GET":
+        makanan = Makanan.objects.all()
+
+        return JsonResponse(MakananSerializer(makanan, many=True).data, status=200, safe=False)
+
+    return HttpResponseNotFound()
+
+
+@csrf_exempt
+def flutter_get_makanan_by_id(request, id):
+
+    if request.method == "GET":
+        makanan = Makanan.objects.get(pk=id)
+
+        return JsonResponse(MakananSerializer(makanan).data, status=200)
+
+    return HttpResponseNotFound()
