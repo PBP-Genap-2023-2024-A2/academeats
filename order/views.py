@@ -13,7 +13,6 @@ from user_profile.models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 
 
-@penjual_only
 def show_main_penjual(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     orders = Order.objects.filter(toko=toko)
@@ -47,7 +46,6 @@ def show_main_penjual_json(request, toko_id):
 
     return JsonResponse(context)
 
-@pembeli_only
 def show_main_pembeli(request):
     orders = Order.objects.all()
     order_group = OrderGroup.objects.all()
