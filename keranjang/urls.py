@@ -15,5 +15,4 @@ urlpatterns = [
 
     # * FLUTTER API * #
     path('api/v1/get-keranjang-item/<str:username>/', views.get_users_cart_items, name='get-keranjang-item'),
-    path('api/v1/tambah-item/', views.flutter_add_item_to_cart, name='flutter_add_item_to_cart'),
 ]

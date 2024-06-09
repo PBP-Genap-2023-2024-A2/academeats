@@ -70,7 +70,7 @@ def delete_item(request, keranjang_id):
 def cek_stok(request, keranjang_id):
     keranjang = ItemKeranjang.objects.get(pk=keranjang_id)
     stok = keranjang.makanan.stok
-    return JsonResponse({'stok': stok})
+    return JsonResponse({'stok': stok, 'message' : 'success'})
 
 
 @csrf_exempt
@@ -139,32 +139,3 @@ def get_users_cart_items(request, username):
 
         return JsonResponse(KeranjangSerializer(keranjang_item, many=True).data, status=200, safe=False)
     return HttpResponseNotFound()
-
-
-@csrf_exempt
-def flutter_add_item_to_cart(request):
-    if request.method == "POST":
-        decoded = request.body.decode('utf-8')
-        body = json.loads(decoded)
-
-        id_makanan = body['id_makanan']
-        username_user = body['username']
-        jumlah = body['jumlah']
-
-        try:
-            makanan = Makanan.objects.get(pk=int(id_makanan))
-            user = UserProfile.objects.get(username=username_user)
-        except Makanan.DoesNotExist:
-            return HttpResponse(status=400)
-        except UserProfile.DoesNotExist:
-            return HttpResponse(status=400)
-
-        try:
-            item = ItemKeranjang(user=user, makanan=makanan, jumlah=jumlah)
-            item.save()
-        except:
-            return HttpResponse(status=500)
-
-        return JsonResponse(KeranjangSerializer(item).data, status=201)
-    return HttpResponseNotFound()
-

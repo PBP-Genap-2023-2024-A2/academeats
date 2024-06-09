@@ -139,6 +139,20 @@ def edit_status_batal(request, og_id):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+@csrf_exempt
+def return_stok(request, og_id):
+    if request.method == 'POST':
+        order_group= OrderGroup.objects.get(pk=og_id)
+        orders = Order.objects.filter(order_group=order_group)
+
+        for order in orders:
+            order.makanan.stok += order.quantity
+            order.makanan.save()
+        
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+        
 
 
 # * HELPER FUNCTION * #
@@ -179,9 +193,10 @@ def flutter_get_og_by_id(request, id):
         return JsonResponse(context, status=200)
     return HttpResponse()
 
-def flutter_get_og_by_user(request):
+def flutter_get_og_by_user(request, username):
     if request.method == "GET":
-        ogs = OrderGroup.objects.filter(user=request.user)
+        user = UserProfile.objects.get(username=username)
+        ogs = OrderGroup.objects.filter(user=user)
 
         order_groups = []
         for og in ogs:
