@@ -179,9 +179,10 @@ def flutter_get_og_by_id(request, id):
         return JsonResponse(context, status=200)
     return HttpResponse()
 
-def flutter_get_og_by_user(request):
+def flutter_get_og_by_user(request, username):
     if request.method == "GET":
-        ogs = OrderGroup.objects.filter(user=request.user)
+        user = UserProfile.objects.get(username=username)
+        ogs = OrderGroup.objects.filter(user=user)
 
         order_groups = []
         for og in ogs:
