@@ -67,7 +67,7 @@ def delete_item(request, keranjang_id):
 def cek_stok(request, keranjang_id):
     keranjang = ItemKeranjang.objects.get(pk=keranjang_id)
     stok = keranjang.makanan.stok
-    return JsonResponse({'stok': stok})
+    return JsonResponse({'stok': stok, 'message' : 'success'})
 
 
 @csrf_exempt

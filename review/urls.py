@@ -12,6 +12,6 @@ urlpatterns = [
 
     #for flutter 
     path('api/v1/', show_review_flutter, name='flutter_get_all_review'),
-    path('api/v1/create/<int:makanan_id>', create_review_flutter, name='flutter_create_review'),
+    path('api/v1/create/<int:makanan_id>/<str:username>/', create_review_flutter, name='flutter_create_review'),
     path('api/v1/reply/<int:review_id>', reply_review_flutter, name='flutter_reply_review'),
 ]
