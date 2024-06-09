@@ -8,6 +8,7 @@
                 <div class="col-md-5 col-xl-4 text-center text-md-start">
                     <h2 class="display-6 fw-bold mb-5"><span class="underline pb-1"><strong>Daftar</strong></span></h2>
                     <form method="post" data-bs-theme="light">
+                        {% csrf_token %}
                         <div class="mb-3"><input class="shadow-sm form-control" type="text" name="username" placeholder="Username"></div>
                         <div class="mb-3"><input class="shadow-sm form-control" type="email" name="email" placeholder="Email"></div>
                         <div class="mb-3"><input class="shadow-sm form-control" type="tel" name="nomor_hp" placeholder="Nomor HP"></div>
