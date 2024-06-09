@@ -6,11 +6,11 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from forum.models import Forum, Kategori, Message
+from serializers.forum_serializers import ForumSerializer
 from utils.decorators import has_profile_only
 
 
 def forum_home(request):
-
     if request.GET.get("q"):
         forums = Forum.objects.filter(judul__contains=request.GET.get("q"))
     elif request.GET.get("kategori"):
@@ -30,11 +30,10 @@ def forum_home(request):
         'categories': categories,
     }
 
-    return render(request,  'forum-home.html', context)
+    return render(request, 'forum-home.html', context)
 
 
 def create_new_forum(request):
-
     if request.method == 'POST':
         judul = request.POST.get('judul')
         deskripsi = request.POST.get('deskripsi')
@@ -68,6 +67,7 @@ def edit_forum(request, forum_id):
 
     return render(request, 'edit_forum.html', {'forum': forum})
 
+
 def buat_pesan(request, forum_id, reply_to=None):
     forum = Forum.objects.get(pk=forum_id)
 
@@ -92,6 +92,7 @@ def buat_pesan(request, forum_id, reply_to=None):
 
     return render(request, 'buat_pesan.html', {})
 
+
 def forum_page(request, forum_id):
     forum = Forum.objects.get(pk=forum_id)
     categories = Kategori.objects.all()
@@ -100,7 +101,6 @@ def forum_page(request, forum_id):
 
 @csrf_exempt
 def delete_forum(request, forum_id):
-
     try:
         forum = Forum.objects.get(pk=forum_id)
         forum.delete()
@@ -108,8 +108,25 @@ def delete_forum(request, forum_id):
         return HttpResponse(status=500)
     return HttpResponse(status=200)
 
+
 @csrf_exempt
 def get_all_replies(request, forum_id):
     forum = Forum.objects.get(pk=forum_id)
     replies = Message.objects.filter(forum=forum)
     return HttpResponse(serializers.serialize('json', replies), content_type='application/json')
+
+
+# * API FLUTTER ONLY * #
+
+def flutter_get_all_forums(request):
+    if request.method == "GET":
+        forums_all = Forum.objects.all()
+
+        paginator = Paginator(forums_all, 10)
+
+        page_number = request.GET.get("page") or 1
+        forums = paginator.get_page(page_number)
+
+        return JsonResponse(ForumSerializer(forums, many=True).data, status=200, safe=False)
+
+    return HttpResponseNotFound()

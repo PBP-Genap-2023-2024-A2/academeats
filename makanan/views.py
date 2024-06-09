@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from makanan.models import Makanan
 from review.models import Review
+from serializers.makanan_serializers import MakananSerializer
 from toko.models import Toko
 from makanan.forms import MakananForm
 from django.http import HttpResponseRedirect
@@ -90,3 +91,10 @@ def edit_makanan(request, makanan_id):
 
     context = {'form': form}
     return render(request, "edit_makanan.html", context)
+
+
+# TES
+def tes_get_all_makanan(request):
+    makanan = Makanan.objects.all()
+
+    return JsonResponse(MakananSerializer(makanan, many=True).data, status=200, safe=False)
