@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.show_main_pembeli, name='show_main_pembeli'),
     path('edit_status_penjual/', views.edit_status_penjual, name='edit_status_penjual'),
     path('edit_status_batal/<int:og_id>', views.edit_status_batal, name='edit_status_batal'),
+    path('return_stok/<int:og_id>', views.return_stok, name='return_stok'),
 
     # * FLUTTER API * #
     path('show_main_penjual_json/<int:id>', views.show_main_penjual_json, name='show_main_penjual_json'),

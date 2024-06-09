@@ -106,7 +106,6 @@ def tambah_makanan(request, toko_id):
     return render(request, 'tambah_makanan.html', context)
 
 
-# * FOR FLUTTER ONLY!! * #
 
 # * FLUTTER DEV API * #
 
@@ -121,17 +120,14 @@ def flutter_get_all_toko(request):
 
     return HttpResponseNotFound()
 
-
 @csrf_exempt
 def flutter_get_toko_by_id(request, id):
-
     if request.method == "GET":
         toko = Toko.objects.get(pk=id)
 
         return JsonResponse(TokoSerializer(toko).data, status=200)
 
     return HttpResponseNotFound()
-
 
 def flutter_get_toko_by_user(request, username):
     if request.method == "GET":
@@ -141,6 +137,8 @@ def flutter_get_toko_by_user(request, username):
         return JsonResponse(TokoSerializer(toko, many=True).data, status=200, safe=False)
 
     return HttpResponseNotFound()
+
+
 
 # * TESTING PURPOSE * #
 
