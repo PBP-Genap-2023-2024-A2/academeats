@@ -1,0 +1,69 @@
+{% extends 'base_.html' %}
+
+{% block body %}
+    <section class="py-5 mt-5">
+        <div class="container-fluid py-4 py-xl-5">
+            <div class="row gy-4 gy-md-0">
+                <div class="col-md-6">
+                    <div class="p-xl-5 m-xl-5"><img class="rounded img-fluid w-100 fit-cover" style="min-height: 300px;" src="{{ makanan.img_url }}"></div>
+                </div>
+                <div class="col-md-6 d-md-flex align-items-md-center">
+                    <div style="max-width: 350px;">
+                        <h2 class="text-uppercase fw-bold">{{ makanan.nama }}</h2><sub><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-star-filled">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z" stroke-width="0" fill="currentColor"></path>
+                            </svg>&nbsp; ({{ rating }})</sub>
+                        <p class="my-3">Rp{{ makanan.harga }}</p>
+                        <div data-reflow-type="add-to-cart" data-reflow-show="quantity,button"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body" style="padding-bottom: 48px;padding-top: 46px;">
+                    <h4 class="card-title">Toko</h4>
+                    <h6 class="text-muted card-subtitle mb-2">Telah bergabung sejak 1995</h6><button class="btn btn-primary" type="button">Kunjungi toko</button>
+                </div>
+            </div>
+            <div class="card flex-row align-items-center"></div>
+        </div>
+        <div class="container" style="padding-left: 31px;padding-right: 30px;">
+            <div class="row">
+                <div class="col">
+                    <div class="card bg-primary-subtle"></div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <h1>Review</h1>
+        </div>
+        <div class="container">
+            <div class="vstack">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Rasanya enak!</h4>
+                        <h6 class="text-muted card-subtitle mb-2">Andi Budiotno (Customer)</h6>
+                        <p class="card-text">Makanannya enak dan nikmat</p>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="text-muted card-subtitle mb-2">Penjual Nama Toko</h6>
+                                <p class="card-text">Terima kasih!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Rasanya enak!</h4>
+                        <h6 class="text-muted card-subtitle mb-2">Andi Budiotno (Customer)</h6>
+                        <p class="card-text">Makanannya enak dan nikmat</p>
+                        <div class="card">
+                            <div class="card-body">
+                                <h6 class="text-muted card-subtitle mb-2">Penjual Nama Toko</h6>
+                                <p class="card-text">Terima kasih!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

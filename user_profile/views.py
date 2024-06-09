@@ -33,26 +33,7 @@ def register(request):
 
         messages.error(request, form.errors)
 
-    return render(request, 'register.html')
-
-
-@login_required(login_url='login')
-def create_profile(request):
-    pass
-
-    # if request.method == "POST":
-    #     form = ProfileForm(request.POST, instance=request.user.profile)
-    #
-    #     if form.is_valid():
-    #         profile = form.save(commit=False)
-    #         request.user.profile = profile
-    #         request.user.save()
-    #
-    #         return HttpResponseRedirect(reverse('user_profile:login'))
-    #
-    #     messages.error(request, form.errors)
-    #
-    # return render(request, 'create_profile.html')
+    return render(request, 'signup.html')
 
 
 # Fungsi untuk melakukan login user
