@@ -222,3 +222,32 @@ def flutter_user_info(request):
         return JsonResponse({'success': True, 'user': UserSerializer(user).data}, status=200)
 
     return HttpResponseNotFound()
+
+@csrf_exempt
+def flutter_top_up(request):
+    if request.method == "POST":
+        decoded = request.body.decode('utf-8')
+        body = json.loads(decoded)
+        amount = body['jumlah']
+        username = body['username']
+
+        if not username or not amount:
+            return JsonResponse({'success': False, 'message': 'Username dan amount diperlukan!'}, status=400)
+
+        try:
+            amount = int(amount)
+        except ValueError:
+            return JsonResponse({'success': False, 'message': 'Amount harus berupa angka!'}, status=400)
+
+        try:
+            user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Pengguna tidak ditemukan!'}, status=404)
+
+        user.saldo += amount
+        user.saldo -= 1000
+        user.save()
+
+        return JsonResponse({'success': True, 'message': 'Top up berhasil!', 'saldo': user.saldo}, status=200)
+
+    return HttpResponseNotFound()
