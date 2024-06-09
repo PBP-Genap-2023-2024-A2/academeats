@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Features - AcademEats</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="https://cdn.reflowhq.com/v2/toolkit.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
     <link rel="stylesheet" href="{% static 'css/bs-theme-overrides.css' %}">
     <link rel="stylesheet" href="{% static 'css/Testimonials-images.css' %}">
@@ -26,13 +25,15 @@
                     <li class="nav-item"><a class="nav-link" href="contacts.html">Kontak</a></li>
                     <li class="nav-item"></li>
                 </ul>
-                {% if request.user %}
-                    <button class="btn"><i class="fa fa-shopping-cart"></i></button>
-                    KONTOL
+                {% if request.user.username %}
+                    <div class="row">
+                        <button class="btn"><i class="fa fa-shopping-cart"></i></button>
+                        <img class="w-100" src="{{ request.user.pfp_url }}" alt="">
+                    </div>
                 {% else %}
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn">Masuk</button>
-                        <button type="button" class="btn btn-secondary">Daftar</button>
+                        <a href="{% url 'user_profile:login' %}" class="btn btn-secondary text-white">Masuk</a>
+                        <a href="{% url 'user_profile:register' %}" class="btn btn-primary">Daftar</a>
                     </div>
                 {% endif %}
             </div>
@@ -95,7 +96,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <script src="{% static 'js/bs-init.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/startup-modern.js' %}"></script>
+    <script src="https://kit.fontawesome.com/6ce9993a9f.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

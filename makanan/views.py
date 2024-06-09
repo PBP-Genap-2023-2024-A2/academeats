@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -13,18 +14,34 @@ from django.urls import reverse
 from utils.decorators import has_profile_only, penjual_only
 
 
-@has_profile_only
+def home(request):
+    makanan = Makanan.objects.all()
+
+    paginator = Paginator(makanan, 15)
+
+    page_number = request.GET.get("page") or 1
+    items = paginator.get_page(page_number)
+
+    top_makanan = makanan[:3]
+
+    context = {
+        'items': items,
+        'top_makanan': top_makanan,
+    }
+
+    return render(request, 'home-page.html', context)
+
+
 def detail_makanan(request, makanan_id):
     makanan = Makanan.objects.get(pk=makanan_id)
     reviews = Review.objects.filter(makanan=makanan)
-    user = request.user
-    profile = user.profile
     is_penjual = False
 
     try:
-        toko = Toko.objects.get(user=request.user)
-        if toko == makanan.toko:
-            is_penjual = True
+        pass
+        # toko = Toko.objects.get(user=request.user)
+        # if toko == makanan.toko:
+        #     is_penjual = True
     except Toko.DoesNotExist:
         pass
 
@@ -44,10 +61,9 @@ def detail_makanan(request, makanan_id):
         'rating': rating,
         'count': count,
         'is_penjual': is_penjual,
-        'profile': profile,
     }
 
-    return render(request, "detail_makanan.html", context)
+    return render(request, "makanan-detail.html", context)
 
 
 @csrf_exempt

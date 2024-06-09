@@ -1,0 +1,159 @@
+{% extends 'base_.html' %}
+
+{% block body %}
+    <section class="py-5 mt-5">
+        <div class="container">
+            <h1 style="margin-bottom: 16px;">Keranjang</h1>
+        </div>
+        <div class="container">
+            <div class="row row-cols-1 d-flex justify-content-center align-items-center">
+                <div class="col text-center">
+                    <ul class="list-group">
+                        {% for k in cart %}
+                        <li class="list-group-item">
+                            <div class="card">
+                                <div class="card-body flex-row d-flex align-items-center">
+                                    <div class="ratio ratio-1x1" style="max-width: 20%;">
+                                        <img src="{{ k.makanan.img_url }}" class="img-fluid" style="margin-right: 14px;" />
+                                    </div>
+                                    <div class="p-2 d-flex flex-column align-items-start">
+                                        <h4>{{ k.makanan.nama }}</h4><strong class="fs-6">Rp{{ k.makanan.harga }}</strong>
+                                    </div>
+                                    <div class="flex-grow-1 d-flex flex-column align-items-end">
+                                        <input type="checkbox" class="btn-check" name="cart-item-{{ k.pk }}" id="cart-item-{{ k.pk }}" onchange="checkedButton(this)" value="{{ k.pk }}"  />
+                                        <label class="btn btn-outline-primary btn-sm mb-2" for="cart-item-{{ k.pk }}"><i class="fa fa-check"></i></label>
+                                        <div class="input-group d-flex flex-row justify-content-end" style="width: 15vw; height: 5vh;">
+                                            <button class="btn btn-primary btn-sm" type="button" value="{{ k.pk }}" onclick="decreaseQuantity(this)">-</button>
+                                            <input class="form-control text-center" type="text" id="quantity-{{ k.pk }}" value="{{ k.jumlah }}"/>
+                                            <button class="btn btn-primary btn-sm" type="button" value="{{ k.pk }}" onclick="increaseQuantity(this)">+</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col d-flex justify-content-end align-items-center">
+                    <div class="h-100 d-flex flex-column justify-content-center align-items-center me-5">
+                        <span class="d-block">Harga Total: </span>
+                        <strong><span id="total-price"></span></strong>
+                    </div>
+                    <button class="btn btn-primary" type="button" style="margin-top: 30px;">Checkout!</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const daftarKeranjang = {}
+        let hargaTotal = 0
+        const hargaElement = document.getElementById('total-price')
+
+        {% for item in cart %}
+            daftarKeranjang["{{ item.pk }}"] = {};
+
+            daftarKeranjang["{{ item.pk }}"]['stok'] = {{ item.makanan.stok }}
+            daftarKeranjang["{{ item.pk }}"]['harga'] = {{ item.makanan.harga }}
+            daftarKeranjang["{{ item.pk }}"]['jumlah'] = {{ item.jumlah }}
+            daftarKeranjang["{{ item.pk }}"]['check'] = false
+        {% endfor %}
+
+        function hitungTotalHarga() {
+            hargaTotal = 0
+            for (let item in daftarKeranjang) {
+                if (daftarKeranjang[item]['check']) {
+                    hargaTotal += daftarKeranjang[item]['harga'] * daftarKeranjang[item]['jumlah']
+                }
+            }
+        }
+
+        async function updateHarga() {
+            hitungTotalHarga()
+
+            hargaElement.innerText = `${hargaTotal}`
+        }
+
+        async function checkedButton(el) {
+            daftarKeranjang[el.value]['check'] = el.checked
+            await updateHarga()
+        }
+
+        updateHarga()
+
+        async function deleteItem(id) {
+            // 9999 is only a placeholder
+            await fetch(`{% url 'keranjang:delete-item' keranjang_id=9999 %}`.replace(/9999/, id), {
+                method: "DELETE"
+            })
+
+            document.getElementById(`cart-row-${id}`).remove()
+            delete daftarStok[id]
+        }
+
+        async function updateJumlah(id, quantity) {
+            var data = new FormData()
+            data.append('jumlah', quantity.toString())
+
+            await fetch("{% url 'keranjang:update-jumlah' keranjang_id=9999 %}".replace(/9999/, id), {
+                method: "POST",
+                body: data
+            })
+        }
+
+        async function decreaseQuantity(el) {
+            let quantityInput = document.getElementById(`quantity-${el.value}`);
+            let quantity = Number(quantityInput.value);
+            if (quantity > 1) {
+                quantityInput.value = quantity - 1;
+                daftarKeranjang[el.value]['jumlah'] = quantity - 1;
+
+                await updateJumlah(el.value, quantity - 1)
+
+                updateHarga()
+            }
+        }
+
+        async function increaseQuantity(el) {
+            let quantityInput = document.getElementById(`quantity-${el.value}`);
+            let quantity = Number(quantityInput.value);
+
+            if (quantity >= daftarKeranjang[el.value]['stok']) {
+                kelebihan_alert.showModal();
+                return
+            }
+
+            quantityInput.value = quantity + 1;
+            daftarKeranjang[el.value]['jumlah'] = quantity + 1;
+
+            await updateJumlah(el.value, quantity + 1)
+
+            updateHarga()
+        }
+
+        async function submitForm() {
+            var data = new FormData()
+
+            const items = []
+
+            for (const item in daftarKeranjang) {
+                if (daftarKeranjang[item]['check']) {
+                    items.push(item)
+                }
+            }
+
+            data.append('obj', JSON.stringify(items))
+            data.append('total', hargaTotal.toString())
+
+            await fetch("{% url 'keranjang:checkout-cart' %}", {
+                method: "POST",
+                body: data
+            })
+
+            window.location.replace("{% url 'order:show_main_pembeli' %}");
+        }
+    </script>
+{% endblock %}

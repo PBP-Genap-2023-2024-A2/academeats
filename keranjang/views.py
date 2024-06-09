@@ -14,17 +14,14 @@ from user_profile.models import UserProfile
 from utils.decorators import has_profile_only
 
 
-@has_profile_only
 def show_main(request):
+    # cart = ItemKeranjang.objects.filter(user=request.user)
     cart = ItemKeranjang.objects.all()
-
-    print(cart)
-
     context = {
         'cart': cart,
     }
 
-    return render(request, "home.html", context)
+    return render(request, "keranjang.html", context)
 
 
 @csrf_exempt
