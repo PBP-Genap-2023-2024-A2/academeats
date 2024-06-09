@@ -14,7 +14,7 @@ urlpatterns = [
     path('api/v1/order_group/<int:id>', views.flutter_get_og_by_id, name='flutter_get_og_by_id'),
     path('api/v1/<int:toko_id>/orders', views.flutter_get_order, name='flutter_get_order'),
     path('api/v1/flutter_edit_status', views.flutter_edit_status, name='flutter_edit_status'),
-    path('api/v1/flutter_get_og_by_user', views.flutter_get_og_by_user, name='flutter_get_og_by_user'),
+    path('api/v1/flutter_get_og_by_user/<str:username>/', views.flutter_get_og_by_user, name='flutter_get_og_by_user'),
 
     # * TESTING PURPOSE * #
     path('get_order_status/<int:id>', views.order_status, name='order_status'),
