@@ -15,8 +15,8 @@ urlpatterns = [
     path('delete/<slug:username>', views.delete_acc, name='delete'),  # FOR DEVELOPMENT PURPOSE ONLY!
 
     # * FLUTTER API * #
-    path('api/v1/daftar', views.flutter_daftar, name='flutter_daftar'),
-    path('api/v1/masuk', views.flutter_masuk, name='flutter_masuk'),
-    path('api/v1/keluar', views.flutter_logout, name='flutter_logout'),
-    path('api/v1/profil', views.flutter_user_info, name='flutter_user_info'),
+    path('api/v1/daftar/', views.flutter_daftar, name='flutter_daftar'),
+    path('api/v1/masuk/', views.flutter_masuk, name='flutter_masuk'),
+    path('api/v1/keluar/', views.flutter_logout, name='flutter_logout'),
+    path('api/v1/profil/', views.flutter_user_info, name='flutter_user_info'),
 ]

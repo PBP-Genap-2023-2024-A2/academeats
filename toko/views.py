@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from makanan.forms import MakananForm
 from makanan.models import Makanan
+from user_profile.models import UserProfile
 from serializers.toko_serializers import TokoSerializer
 from toko.forms import TokoForm
 from toko.models import Toko
@@ -131,3 +132,22 @@ def flutter_get_toko_by_id(request, id):
 
     return HttpResponseNotFound()
 
+
+def flutter_get_toko_by_user(request):
+    if request.method == "GET":
+        toko = Toko.objects.filter(user=request.user)
+
+        return JsonResponse(TokoSerializer(toko).data, status=200)
+
+    return HttpResponseNotFound()
+
+# * TESTING PURPOSE * #
+
+def flutter_get_toko_by_user_test(request, id):
+    if request.method == "GET":
+        user = UserProfile.objects.get(pk=id)
+        toko = Toko.objects.filter(user=user)
+
+        return JsonResponse(TokoSerializer(toko, many=True).data, status=200, safe=False)
+
+    return HttpResponseNotFound()
