@@ -139,6 +139,20 @@ def edit_status_batal(request, og_id):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+@csrf_exempt
+def return_stok(request, og_id):
+    if request.method == 'POST':
+        order_group= OrderGroup.objects.get(pk=og_id)
+        orders = Order.objects.filter(order_group=order_group)
+
+        for order in orders:
+            order.makanan.stok += order.quantity
+            order.makanan.save()
+        
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+        
 
 
 # * HELPER FUNCTION * #
