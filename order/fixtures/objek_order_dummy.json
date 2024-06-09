@@ -17,7 +17,7 @@
     "toko": 1,
     "user": 1,
     "quantity": 10,
-    "status": "SELESAI"
+    "status": "DIPROSES"
   }
 },
 {
@@ -31,5 +31,50 @@
     "quantity": 10,
     "status": "SELESAI"
   }
+},
+{
+  "model": "order.OrderGroup",
+  "pk": 2,
+  "fields": {
+      "date_added": "2024-06-09 19:10:10",
+      "user": 1,
+      "total_harga": 123.0
+  }
+},
+{
+"model": "order.Order",
+"pk": 3,
+"fields": {
+  "order_group": 2,
+  "makanan": 3,
+  "toko": 2,
+  "user": 1,
+  "quantity": 12,
+  "status": "SELESAI"
 }
+},
+{
+"model": "order.Order",
+"pk": 4,
+"fields": {
+  "order_group": 2,
+  "makanan": 4,
+  "toko": 3,
+  "user": 1,
+  "quantity": 23,
+  "status": "SELESAI"
+}
+},
+{
+  "model": "order.Order",
+  "pk": 5,
+  "fields": {
+    "order_group": 2,
+    "makanan": 5,
+    "toko": 4,
+    "user": 1,
+    "quantity": 34,
+    "status": "SELESAI"
+  }
+  }
 ]

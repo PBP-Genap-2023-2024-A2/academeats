@@ -12,4 +12,5 @@ urlpatterns = [
     path('review/', include(('review.urls', 'review'), namespace='review')),
     path('forum/', include(('forum.urls', 'forum'), namespace='forum')),
     path('admin/', admin.site.urls),
+    path('auth/', include('authentication.urls')),
     ]
