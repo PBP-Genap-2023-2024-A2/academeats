@@ -188,4 +188,31 @@ def flutter_get_makanan_by_toko_id(request, toko_id):
     return HttpResponseNotFound()
 
 
+@csrf_exempt
+def flutter_add_makanan(request, toko_id):
+    if request.method == "POST":
+        try:
+            toko = Toko.objects.get(pk=toko_id)
+        except Toko.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Toko not found'}, status=404)
+
+        data = json.loads(request.body)
+
+        new_makanan = Makanan(
+            nama=data.get('nama'),
+            harga=data.get('harga'),
+            stok=data.get('stok'),
+            img_url=data.get('img_url'),
+            toko=toko
+        )
+
+        new_makanan.save()
+        return JsonResponse(
+            {'success': True, 'message': 'Makanan added successfully', 'makanan': MakananSerializer(new_makanan).data},
+            status=201)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
+
+
+
 
