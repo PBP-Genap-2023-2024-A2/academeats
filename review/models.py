@@ -12,6 +12,6 @@ class Review(models.Model):
     makanan = models.ForeignKey(Makanan, on_delete=models.CASCADE, null=True)
 
     nilai = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(5)], default=0)
-    komentar = models.TextField()
+    komentar = models.TextField(null=True, default="-")
     reply = models.TextField(null=True)
 
