@@ -136,3 +136,59 @@ def get_users_cart_items(request, username):
 
         return JsonResponse(KeranjangSerializer(keranjang_item, many=True).data, status=200, safe=False)
     return HttpResponseNotFound()
+
+@csrf_exempt
+def flutter_checkout_cart(request, username):
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        ids = body['obj']
+        total_harga = body['total_harga']
+        print(ids)
+
+        if total_harga == 0:
+            return HttpResponse(status=400)
+
+        user = UserProfile.objects.get(username=username)
+        order_group = OrderGroup(user=user, total_harga=total_harga)
+        order_group.save()
+
+        for item_id in ids:
+            item = ItemKeranjang.objects.get(pk=int(item_id))
+
+            if item.jumlah > item.makanan.stok:
+                order_group.delete()
+                return HttpResponse(400)
+
+            order = Order(order_group=order_group, user=user, makanan=item.makanan, toko=item.makanan.toko, quantity=item.jumlah)
+            order.save()
+
+            item.makanan.stok -= item.jumlah
+            item.makanan.save()
+
+            item.delete()
+
+        return JsonResponse({'message': 'Checkout successful'})
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def flutter_update_jumlah(request, keranjang_id):
+    if request.method == "POST":
+        keranjang = ItemKeranjang.objects.get(pk=keranjang_id)
+
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        keranjang.jumlah = body['jumlah']
+        keranjang.save()
+
+        return JsonResponse({'jumlah': keranjang.jumlah, 'status': 'success'})
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def flutter_delete_item(request, keranjang_id):
+
+    ItemKeranjang.objects.get(pk=keranjang_id).delete()
+
+    return JsonResponse({'message': 'success'})
