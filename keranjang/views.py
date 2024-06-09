@@ -1,5 +1,5 @@
 from django.core import serializers
-from django.http import HttpResponseNotFound, HttpResponse, JsonResponse
+from django.http import HttpResponseNotFound, HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -9,6 +9,8 @@ from makanan.models import Makanan
 from order.models import OrderGroup, Order
 from django.contrib.auth.decorators import login_required
 
+from serializers.keranjang_seraializers import KeranjangSerializer
+from user_profile.models import UserProfile
 from utils.decorators import has_profile_only
 
 
@@ -120,3 +122,20 @@ def update_jumlah(request, keranjang_id):
 def cek_jumlah_item(request):
     item_keranjang = ItemKeranjang.objects.filter(user=request.user)
     return HttpResponse(len(item_keranjang))
+
+# * FOR FLUTTER ONLY!! * #
+
+# * FLUTTER DEV API * #
+
+@csrf_exempt
+def get_users_cart_items(request, username):
+    if request.method == "GET":
+        try:
+            user = UserProfile.objects.get(username=username)
+        except UserProfile.DoesNotExist:
+            return HttpResponseBadRequest()
+
+        keranjang_item = ItemKeranjang.objects.filter(user=user)
+
+        return JsonResponse(KeranjangSerializer(keranjang_item, many=True).data, status=200, safe=False)
+    return HttpResponseNotFound()

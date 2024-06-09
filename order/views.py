@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from keranjang.models import ItemKeranjang
 from serializers.order_serializers import OrderGroupSerializer, OrderSerializer
@@ -8,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from toko.models import Toko
 from makanan.models import Makanan
+from user_profile.models import UserProfile
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -104,13 +106,15 @@ def show_main_pembeli_json(request):
 @csrf_exempt
 def edit_status_penjual(request):
     if request.method == 'POST':
-        order_id = request.POST.get('order_id')
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        order_id = body['order_id']
         order = Order.objects.get(pk=int(order_id))
 
         if (order.status == "DIBATALKAN"):
             return HttpResponse(400)
 
-        order_status = request.POST.get('order_status')
+        order_status = body['order_status']
         order.status = getattr(Order.StatusPesanan, order_status)
         order.save()
 
@@ -120,17 +124,25 @@ def edit_status_penjual(request):
 
 @csrf_exempt
 def edit_status_batal(request, og_id):
-    order_group = OrderGroup.objects.get(pk=og_id)
-    orders = Order.objects.filter(order_group=order_group)
+    if request.method == 'POST':
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        og_id = body['og_id']
+        order_group = OrderGroup.objects.get(pk=int(og_id))
+        orders = Order.objects.filter(order_group=order_group)
 
-    for order in orders:
-        order.status = Order.StatusPesanan.DIBATALKAN
-        order.save()
+        for order in orders:
+            order.status = Order.StatusPesanan.DIBATALKAN
+            order.save()
 
-    return HttpResponse(status=200)
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
-# HELPER FUNCTION
+
+# * HELPER FUNCTION * #
+
 def aggregat_status(orders):
     statuses = []
     status = ""
@@ -150,15 +162,94 @@ def aggregat_status(orders):
     return status
 
 
-# * FOR FLUTTER ONLY!! * #
 
 # * FLUTTER DEV API * #
 
 def flutter_get_og_by_id(request, id):
     if request.method == "GET":
         og = OrderGroup.objects.get(pk=id)
-
         orders = Order.objects.filter(order_group=og)
 
+        context = {
+            "og": OrderGroupSerializer(og).data,
+            "orders": OrderSerializer(orders, many=True).data,
+            "status": aggregat_status(orders)
+        }
+
+        return JsonResponse(context, status=200)
+    return HttpResponse()
+
+def flutter_get_og_by_user(request):
+    if request.method == "GET":
+        ogs = OrderGroup.objects.filter(user=request.user)
+
+        order_groups = []
+        for og in ogs:
+            orders = Order.objects.filter(order_group=og)
+            order_groups.append(OrderGroupSerializer(og).data)
+            order_groups[len(order_groups)-1]['orders'] = OrderSerializer(orders, many=True).data
+            order_groups[len(order_groups)-1]['status'] = aggregat_status(orders)
+
+        return JsonResponse(order_groups, status=200, safe=False)
+    return HttpResponse()
+
+def flutter_get_order(request, toko_id):
+    if request.method == "GET":
+        toko = Toko.objects.get(pk=toko_id)
+        orders = Order.objects.filter(toko=toko)
+
         return JsonResponse(OrderSerializer(orders, many=True).data, status=200, safe=False)
+    return HttpResponse()
+
+def flutter_edit_status(request):
+    if request.method == 'POST':
+        print(request.body)
+        body_unicode = request.body.decode('utf-8')
+        body = json.loads(body_unicode)
+        order_id = body['order_id']
+        order = Order.objects.get(pk=int(order_id))
+
+        if (order.status == "DIBATALKAN"):
+            return HttpResponse(400)
+
+        order_status = body['order_status']
+        order.status = getattr(Order.StatusPesanan, order_status)
+        order.save()
+
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+    
+
+    
+# * TESTING PURPOSE * #
+
+def order_status(request, id):
+    order = Order.objects.get(pk=id)
+    status = order.status
+    status_string = ""
+    if status == order.StatusPesanan.DIBATALKAN:
+        status_string = "DIBATALKAN"
+    elif status == order.StatusPesanan.DIPROSES:
+        status_string = "DIPROSES"
+    elif status == order.StatusPesanan.DIPESAN:
+        status_string = "DIPESAN"
+    else:
+        status_string = "SELESAI"
+
+    return JsonResponse({'status': status_string})
+
+def flutter_get_og_by_user_test(request, id):
+    if request.method == "GET":
+        user = UserProfile.objects.get(pk=id)
+        ogs = OrderGroup.objects.filter(user=user)
+
+        order_groups = []
+        for og in ogs:
+            orders = Order.objects.filter(order_group=og)
+            order_groups.append(OrderGroupSerializer(og).data)
+            order_groups[len(order_groups)-1]['orders'] = OrderSerializer(orders, many=True).data
+            order_groups[len(order_groups)-1]['status'] = aggregat_status(orders)
+
+        return JsonResponse(order_groups, status=200, safe=False)
     return HttpResponse()

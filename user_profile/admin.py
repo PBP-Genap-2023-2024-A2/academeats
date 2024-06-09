@@ -22,4 +22,5 @@ class UserProfileAdmin(BaseUserAdmin):
     ordering = ('email',)
     filter_horizontal = ('groups', 'user_permissions',)
 
+
 admin.site.register(UserProfile, UserProfileAdmin)
