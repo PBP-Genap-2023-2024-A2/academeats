@@ -137,5 +137,5 @@ def get_users_cart_items(request, username):
 
         keranjang_item = ItemKeranjang.objects.filter(user=user)
 
-        return JsonResponse(KeranjangSerializer(keranjang_item, many=True), status=200, safe=False)
+        return JsonResponse(KeranjangSerializer(keranjang_item, many=True).data, status=200, safe=False)
     return HttpResponseNotFound()

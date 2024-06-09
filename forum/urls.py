@@ -9,5 +9,8 @@ urlpatterns = [
     path("delete/<int:forum_id>", views.delete_forum, name='delete'),
     path("get-replies/<int:forum_id>", views.get_all_replies, name='get-replies'),
     path("edit/<int:forum_id>", views.edit_forum, name='edit'),
-    path("buat-pesan/<int:forum_id>/<int:reply_to>", views.buat_pesan, name='buat-pesan')
+    path("buat-pesan/<int:forum_id>/<int:reply_to>", views.buat_pesan, name='buat-pesan'),
+
+    # * API FLUTTER
+    path('api/v1/', views.flutter_get_all_forums, name='flutter_get_all_forums'),
 ]
