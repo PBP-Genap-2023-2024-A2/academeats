@@ -140,6 +140,7 @@ def edit_status_batal(request, og_id):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
 
+
 # * HELPER FUNCTION * #
 
 def aggregat_status(orders):
@@ -180,16 +181,16 @@ def flutter_get_og_by_id(request, id):
 
 def flutter_get_og_by_user(request):
     if request.method == "GET":
-        og = OrderGroup.objects.filter(user=request.user)
-        orders = Order.objects.filter(order_group=og)
+        ogs = OrderGroup.objects.filter(user=request.user)
 
-        context = {
-            "og": OrderGroupSerializer(og).data,
-            "orders": OrderSerializer(orders, many=True).data,
-            "status": aggregat_status(orders)
-        }
+        order_groups = []
+        for og in ogs:
+            orders = Order.objects.filter(order_group=og)
+            order_groups.append(OrderGroupSerializer(og).data)
+            order_groups[len(order_groups)-1]['orders'] = OrderSerializer(orders, many=True).data
+            order_groups[len(order_groups)-1]['status'] = aggregat_status(orders)
 
-        return JsonResponse(context, status=200)
+        return JsonResponse(order_groups, status=200, safe=False)
     return HttpResponse()
 
 def flutter_get_order(request, toko_id):
@@ -219,6 +220,8 @@ def flutter_edit_status(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
     
+
+    
 # * TESTING PURPOSE * #
 
 def order_status(request, id):
@@ -239,14 +242,14 @@ def order_status(request, id):
 def flutter_get_og_by_user_test(request, id):
     if request.method == "GET":
         user = UserProfile.objects.get(pk=id)
-        og = OrderGroup.objects.filter(user=user)
-        orders = Order.objects.filter(order_group=og)
+        ogs = OrderGroup.objects.filter(user=user)
 
-        context = {
-            "og": OrderGroupSerializer(og).data,
-            "orders": OrderSerializer(orders, many=True).data,
-            "status": aggregat_status(orders)
-        }
+        order_groups = []
+        for og in ogs:
+            orders = Order.objects.filter(order_group=og)
+            order_groups.append(OrderGroupSerializer(og).data)
+            order_groups[len(order_groups)-1]['orders'] = OrderSerializer(orders, many=True).data
+            order_groups[len(order_groups)-1]['status'] = aggregat_status(orders)
 
-        return JsonResponse(context, status=200)
+        return JsonResponse(order_groups, status=200, safe=False)
     return HttpResponse()
