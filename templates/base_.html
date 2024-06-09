@@ -27,8 +27,8 @@
                 </ul>
                 {% if request.user.username %}
                     <div class="row">
-                        <button class="btn"><i class="fa fa-shopping-cart"></i></button>
-                        <img class="w-100" src="{{ request.user.pfp_url }}" alt="">
+                        <a href="{% url 'keranjang:show-main' %}" class="btn"><i class="fa fa-shopping-cart"></i></a>
+{#                        <img class="img-rounded" src="{{ request.user.pfp_url }}" alt="">#}
                     </div>
                 {% else %}
                     <div class="btn-group" role="group">
