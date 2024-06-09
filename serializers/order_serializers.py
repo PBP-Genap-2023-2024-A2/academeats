@@ -7,7 +7,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = '__all__'
-        depth = 2
+        depth = 3
 
 
 class OrderGroupSerializer(serializers.ModelSerializer):

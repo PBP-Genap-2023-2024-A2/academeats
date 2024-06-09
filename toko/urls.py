@@ -13,4 +13,8 @@ urlpatterns = [
     # * FLUTTER API * #
     path('api/v1/', views.flutter_get_all_toko, name='flutter_get_all_toko'),
     path('api/v1/<int:id>/', views.flutter_get_toko_by_id, name='flutter_get_toko_by_id'),
+    path('api/v1/user/', views.flutter_get_toko_by_user, name='flutter_get_toko_by_user'),
+
+    # * TESTING PURPOSE * #
+    path('api/v1/user/test/<int:id>', views.flutter_get_toko_by_user_test, name='flutter_get_toko_by_user_test')
 ]
