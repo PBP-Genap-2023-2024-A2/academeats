@@ -213,6 +213,18 @@ def flutter_add_makanan(request, toko_id):
 
     return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=405)
 
+from django.http import JsonResponse
+
+@csrf_exempt
+def flutter_delete_makanan(request, makanan_id):
+    try:
+        makanan = Makanan.objects.get(pk=makanan_id)
+        makanan.delete()
+        return JsonResponse({'success': True, 'message': 'Makanan deleted successfully'}, status=200)
+    except Makanan.DoesNotExist:
+        return JsonResponse({'success': False, 'message': 'Makanan not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)}, status=500)
 
 
 
