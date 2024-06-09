@@ -14,7 +14,6 @@ from toko.models import Toko
 from utils.decorators import penjual_only, pembeli_only
 
 
-@penjual_only
 def manage_toko(request, toko_id=-1):
     toko = Toko.objects.filter(user=request.user)
     if(toko_id == -1):
@@ -22,7 +21,6 @@ def manage_toko(request, toko_id=-1):
     return render(request, 'manage_toko.html', {'toko': toko})
 
 
-@pembeli_only
 def show_toko(request):
     toko = Toko.objects.all()
     context = {'toko': toko}
@@ -30,7 +28,6 @@ def show_toko(request):
 
 
 
-@pembeli_only
 def info_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     menu = Makanan.objects.filter(toko=toko)
@@ -42,7 +39,6 @@ def info_toko(request, toko_id):
     return render(request, 'info_toko.html', context)
 
 
-@penjual_only
 def create_toko(request):
     form = TokoForm(request.POST or None)
 
@@ -56,7 +52,6 @@ def create_toko(request):
     return render(request, 'create_toko.html', context)
 
 
-@penjual_only
 def edit_toko(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
     form = TokoForm(request.POST or None, instance=toko)
@@ -69,7 +64,6 @@ def edit_toko(request, toko_id):
     return render(request, "edit_toko.html", context)
 
 
-@penjual_only
 def tambah_makanan(request, toko_id):
     toko = Toko.objects.get(pk=toko_id)
 

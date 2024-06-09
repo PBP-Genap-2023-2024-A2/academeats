@@ -9,7 +9,7 @@ def index(request):
     #         return render(request, 'index_penjual.html', {'user' : user})
     #     return render(request, 'index_pembeli.html', {'user' : user})
     # return render(request, 'index.html', {})
-    return render(request, 'index.html', {})
+    return render(request, 'index.html', {'title': 'Home'})
     
 def not_found(request):
     return render(request, '404.html', {})
