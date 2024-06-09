@@ -9,6 +9,7 @@ from toko.models import Toko
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, JsonResponse
 from django.forms.models import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
+from user_profile.models import UserProfile
 from utils.decorators import penjual_only, pembeli_only
 from serializers.review_serializers import ReviewSerializer
 
@@ -123,17 +124,13 @@ def show_review_flutter(request):
     return HttpResponseNotFound()
 
 @csrf_exempt
-def create_review_flutter(request, makanan_id):
+def create_review_flutter(request, makanan_id, username):
     if request.method == 'POST':
 
         data = json.loads(request.body)
-
-        user_profile = None
-        if request.user.is_authenticated:
-            user_profile = request.user.profile
-
+        user = UserProfile.objects.get(username=username)
         new_review = Review.objects.create(
-            user = user_profile,
+            user = user,
             makanan = Makanan.objects.get(pk=makanan_id),
             komentar = data["komentar"],
             nilai = int(data["nilai"]),

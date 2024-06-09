@@ -19,4 +19,5 @@ urlpatterns = [
     path('api/v1/masuk/', views.flutter_masuk, name='flutter_masuk'),
     path('api/v1/keluar/', views.flutter_logout, name='flutter_logout'),
     path('api/v1/profil/', views.flutter_user_info, name='flutter_user_info'),
+    path('api/v1/top-up/', views.flutter_top_up, name='flutter_top_up'),
 ]
