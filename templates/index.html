@@ -1,22 +1,5 @@
 {% extends 'base_.html' %}
-
-{% load static %}
-
 {% block body %}
-<body>
-    <nav class="navbar navbar-expand-md fixed-top bg-secondary navbar-shrink py-3 navbar-light" id="mainNav" style="padding-right: 22px;padding-left: 22px;">
-        <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span>AcademEats</span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-1">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="features.html">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="integrations.html">Integrations</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contacts.html">Kontak</a></li>
-                    <li class="nav-item"></li>
-                </ul><span data-reflow-type="view-cart" data-reflow-summary-type="dropdown"><span></span><button class="btn btn-primary" type="button">Keranjang</button></span>
-            </div>
-        </div>
-    </nav>
     <header class="pt-5">
         <div class="container pt-4 pt-xl-5">
             <div class="row pt-5">
@@ -31,7 +14,10 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-10 mx-auto">
-                    <div class="text-center position-relative"><img src="{% static 'img/abstract-coffee-energy.svg' %}" width="580" height="544" style="padding-top: 0px;margin-top: 19px;"></div>
+                    <div class="text-center position-relative">
+                        {% load static %}
+                        <img class="img-fluid w-50" src="{% static 'img/abstract-coffee-energy.svg' %}" width="580" height="544" alt="coffee" style="padding-top: 0px;margin-top: 19px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,7 +141,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 order-first order-md-last">
-                    <div><img class="w-100 fit-cover img-fluid" src="{% static 'img/illustrations/abstract-french-cuisine-a-glass-of-wine-a-baguette-and-a-croissant.svg' %}" style="padding-top: 31px;padding-bottom: 39px;" width="476" height="546"></div>
+                    <div><img class="w-100 fit-cover img-fluid" src="{% static "img/abstract-french-cuisine-a-glass-of-wine-a-baguette-and-a-croissant.svg" %}" style="padding-top: 31px;padding-bottom: 39px;" width="476" height="546"></div>
                 </div>
             </div>
         </div>
@@ -164,7 +150,7 @@
         <div class="container py-4 py-xl-5">
             <div class="row gy-4 gy-md-0">
                 <div class="col-md-6 text-center text-md-start d-flex d-sm-flex d-md-flex justify-content-center align-items-center justify-content-md-start align-items-md-center justify-content-xl-center">
-                    <div><img class="rounded img-fluid fit-cover" style="min-height: 300px;" src={% static 'img/illustrations/presentation.svg' %}" width="800"></div>
+                    <div><img class="rounded img-fluid fit-cover" style="min-height: 300px;" src="{% static "img/illustrations/presentation.svg" %}" width="800"></div>
                 </div>
                 <div class="col">
                     <div style="max-width: 450px;">
@@ -208,7 +194,7 @@
                             <div class="my-3"><a class="btn btn-secondary me-2 mt-2" role="button" href="#">Daftar Pembeli</a><a class="btn btn-light mt-2" role="button" href="#">Daftar Penjual&nbsp;</a></div>
                         </div>
                     </div>
-                    <div class="col-md-6 order-first order-md-last" style="min-height: 250px;"><img class="w-100 h-100 fit-contain pt-5 pt-md-0" src="{% static 'img/illustrations/web-development.svg' %}"></div>
+                    <div class="col-md-6 order-first order-md-last" style="min-height: 250px;"><img class="w-100 h-100 fit-contain pt-5 pt-md-0" src="{% static "img/illustrations/web-development.svg" %}"></div>
                 </div>
             </div>
         </div>

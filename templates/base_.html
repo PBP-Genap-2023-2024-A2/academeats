@@ -25,7 +25,16 @@
                     <li class="nav-item"><a class="nav-link" href="integrations.html">Integrations</a></li>
                     <li class="nav-item"><a class="nav-link" href="contacts.html">Kontak</a></li>
                     <li class="nav-item"></li>
-                </ul><span data-reflow-type="view-cart" data-reflow-summary-type="dropdown"><span></span><button class="btn btn-primary" type="button">Keranjang</button></span>
+                </ul>
+                {% if request.user %}
+                    <button class="btn"><i class="fa fa-shopping-cart"></i></button>
+                    KONTOL
+                {% else %}
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn">Masuk</button>
+                        <button type="button" class="btn btn-secondary">Daftar</button>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </nav>
